@@ -1,0 +1,48 @@
+{
+  "demandaRegulada":    { "kwhMes": 20544221, "kwhMesTxF": 23523654 },
+  "demandaNoRegulada":  { "kwhMes": 22733824, "kwhMesTxF": 24120607 },
+  "contratos": [
+    {"mercado":"Compra MR",  "contraparte":"AES",              "cantidadKwh":0},
+    {"mercado":"Compra MR",  "contraparte":"Enermas",          "cantidadKwh":4133230},
+    {"mercado":"Compra MR",  "contraparte":"Termo 003",        "cantidadKwh":168724},
+    {"mercado":"Compra MR",  "contraparte":"Enerxia",          "cantidadKwh":460000},
+    {"mercado":"Compra MR",  "contraparte":"Nitro",            "cantidadKwh":4092000},
+    {"mercado":"Compra MR",  "contraparte":"Termo 004",        "cantidadKwh":682099},
+    {"mercado":"Compra MR",  "contraparte":"Santafe",          "cantidadKwh":362923},
+    {"mercado":"Compra MR",  "contraparte":"Esprod",           "cantidadKwh":1000003},
+    {"mercado":"Compra MR",  "contraparte":"Bia Generador",    "cantidadKwh":3820847},
+    {"mercado":"Compra MR",  "contraparte":"Bia Generador 2",  "cantidadKwh":1496942},
+    {"mercado":"Compra MNR", "contraparte":"AESP",             "cantidadKwh":1694832},
+    {"mercado":"Compra MNR", "contraparte":"Afinia",           "cantidadKwh":2500004},
+    {"mercado":"Compra MNR", "contraparte":"Carboenergy",      "cantidadKwh":5952000},
+    {"mercado":"Compra MNR", "contraparte":"EPM",              "cantidadKwh":3102480},
+    {"mercado":"Compra MNR", "contraparte":"Esprod Marco",     "cantidadKwh":2771221},
+    {"mercado":"Compra MNR", "contraparte":"Furesas",          "cantidadKwh":1499904},
+    {"mercado":"Compra MNR", "contraparte":"IA",               "cantidadKwh":8790798},
+    {"mercado":"Compra MNR", "contraparte":"Isagen PLG",       "cantidadKwh":705981},
+    {"mercado":"Compra MNR", "contraparte":"Isagen PLC",       "cantidadKwh":967200},
+    {"mercado":"Compra MNR", "contraparte":"Spectrum",         "cantidadKwh":1043181},
+    {"mercado":"Compra MNR", "contraparte":"Proenergy PLC",    "cantidadKwh":2109147},
+    {"mercado":"Compra MNR", "contraparte":"Proenergy PLG",    "cantidadKwh":1676344},
+    {"mercado":"Compra MNR", "contraparte":"Esprod 0225",      "cantidadKwh":0},
+    {"mercado":"Compra MNR", "contraparte":"Esprod 1125",      "cantidadKwh":0},
+    {"mercado":"Compra MNR", "contraparte":"Granja Delta",     "cantidadKwh":198148},
+    {"mercado":"Compra MNR", "contraparte":"Naos",             "cantidadKwh":198980},
+    {"mercado":"Compra MNR", "contraparte":"Granja Polaris",   "cantidadKwh":210260},
+    {"mercado":"Compra MNR", "contraparte":"BIAG restante H0", "cantidadKwh":1718144},
+    {"mercado":"Compra MNR", "contraparte":"TERMO PLD",        "cantidadKwh":0}
+  ],
+  "totalContratosSinBolsa": { "kwhMes": 51355392 },
+  "compraBolsa": {
+    "regulado":   { "kwhMes": 7329631 },
+    "noRegulado": { "kwhMes": 1080978 },
+    "total":      { "kwhMes": 8410609 }
+  },
+  "ventaBolsa": {
+    "regulado":   { "kwhMes": 22745 },
+    "noRegulado": { "kwhMes": 4890995 },
+    "total":      { "kwhMes": 4913740 }
+  },
+  "totalCompra": { "kwhMes": 59766001 },
+  "totalVenta":  { "kwhMes": 55399785 }
+}

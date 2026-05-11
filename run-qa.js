@@ -91,7 +91,7 @@ async function main() {
   }
   console.log(`   Versión: ${versionName}`);
 
-  // 2. Matrices
+  // 2. Matrices — demanda + dispatch_desp (contratos energía despachada)
   console.log('2. balance/matrices...');
   const mat = await apiGet(`/balance/matrices?year=${YEAR}&month=${MONTH}&version_name=${encodeURIComponent(versionName)}`);
   if (mat.status !== 200) { console.error('   ❌ Error matrices:', mat.status); process.exit(1); }
@@ -100,6 +100,13 @@ async function main() {
   const api_dmre = demTotals['DMRE'] || 0;
   const api_dmnr = demTotals['DMNR'] || 0;
   console.log(`   DMRE=${(api_dmre/1e6).toFixed(3)} GWh  DMNR=${(api_dmnr/1e6).toFixed(3)} GWh`);
+
+  // dispatch_desp: contratos energía despachada — fuente usada por la app
+  const dd = mat.data.dispatch_desp || [];
+  const api_cttosMR  = dd.filter(r => r.market_type === 'R').reduce((s, r) => s + r.value, 0);
+  const api_cttosMNR = dd.filter(r => r.market_type === 'N').reduce((s, r) => s + r.value, 0);
+  const api_cttos    = api_cttosMR + api_cttosMNR;
+  console.log(`   Contratos dispatch_desp: MR=${(api_cttosMR/1e6).toFixed(3)} GWh  MNR=${(api_cttosMNR/1e6).toFixed(3)} GWh`);
 
   // 3. Reconciliation
   console.log('3. balance/reconciliation...');
@@ -114,18 +121,9 @@ async function main() {
   const api_ventaBolsa  = api_vBolsaReg + api_vBolsaNR;
   console.log(`   Compra bolsa: ${(api_compraBolsa/1e6).toFixed(3)} GWh  Venta bolsa: ${(api_ventaBolsa/1e6).toFixed(3)} GWh`);
 
-  // 4. Contracts monthly
-  console.log('4. contracts/monthly...');
-  const contr = await apiGet(`/contracts/monthly?limit=2000&offset=0`);
-  if (contr.status !== 200) { console.error('   ❌ Error contracts:', contr.status); process.exit(1); }
-  const items     = Array.isArray(contr.data) ? contr.data : contr.data?.items || [];
-  const janTO     = items.filter(r => r.year === YEAR && r.month === MONTH && r.day_type === 'TO');
-  const compras   = janTO.filter(r => r.operation === 'Compra');
-  const ventas    = janTO.filter(r => r.operation === 'Venta');
-  const api_cttosMR  = compras.filter(r => r.market === 'MR' || r.market_type === 'MR').reduce((s, r) => s + (r.total_quantity || 0), 0);
-  const api_cttosMNR = compras.filter(r => r.market !== 'MR' && r.market_type !== 'MR').reduce((s, r) => s + (r.total_quantity || 0), 0);
-  const api_cttos    = compras.reduce((s, r) => s + (r.total_quantity || 0), 0);
-  console.log(`   Contratos compra: ${(api_cttos/1e6).toFixed(3)} GWh (${compras.length} registros)`);
+  // 4. contracts/monthly — referencia adicional (no es la fuente principal)
+  const compras = []; // kept for apiContracts detail in saved JSON
+  console.log(`   (contracts/monthly omitido — usando dispatch_desp de matrices)`);
 
   // ── Sheet references ──────────────────────────────────────────────────────────
   const sh = {
@@ -190,16 +188,14 @@ async function main() {
   const now = new Date();
   const ts  = now.toISOString().replace(/[:.]/g, '-').substring(0, 19); // 2026-05-11_14-30-22
 
-  // Smart contracts: use TO if present, else sum all day types per contract
+  // Contracts from dispatch_desp — sum per contract number and market_type
   const byContract = {};
-  compras.forEach(r => {
-    if (!byContract[r.contract_number]) byContract[r.contract_number] = { number: r.contract_number, provider: r.provider, dayTypes: {} };
-    byContract[r.contract_number].dayTypes[r.day_type] = (byContract[r.contract_number].dayTypes[r.day_type] || 0) + (r.total_quantity || 0);
+  dd.forEach(r => {
+    const k = r.contract;
+    if (!byContract[k]) byContract[k] = { number: k, market_type: r.market_type, kWh: 0 };
+    byContract[k].kWh += r.value;
   });
-  const smartContracts = Object.values(byContract).map(c => {
-    const qty = c.dayTypes.TO != null ? c.dayTypes.TO : Object.values(c.dayTypes).reduce((s, v) => s + v, 0);
-    return { number: c.number, provider: c.provider, kWh: qty };
-  });
+  const smartContracts = Object.values(byContract).filter(c => c.kWh > 0);
 
   const result = {
     generatedAt: now.toISOString(),
