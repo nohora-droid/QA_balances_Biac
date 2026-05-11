@@ -1,0 +1,68 @@
+{
+  "fuente": "https://docs.google.com/spreadsheets/d/1VcpYek6pGS45nhofob1TyP04wRtBqLFyjCbLpjnDkmA",
+  "periodoRef": "Enero 2026",
+  "version": "TxF",
+  "extractedAt": "2026-05-11T00:00:00.000Z",
+  "nota": "Valores leídos del tab mensual TxF (capturas pantalla). Col D=Plan, Col G=TxF.",
+  "unidades": "kWh",
+
+  "demandaRegulada": {
+    "kwhMes":    18897328,
+    "kwhMesTxF": 21331352,
+    "gwhMes":    18.8973,
+    "gwhMesTxF": 21.3314
+  },
+  "demandaNoRegulada": {
+    "kwhMes":    21333415,
+    "kwhMesTxF": 22591131,
+    "gwhMes":    21.3334,
+    "gwhMesTxF": 22.5911
+  },
+  "contratos": [
+    { "mercado": "Compra MR",  "contraparte": "AES",             "cantidadKwh": 0 },
+    { "mercado": "Compra MR",  "contraparte": "Enermas",         "cantidadKwh": 4133230 },
+    { "mercado": "Compra MR",  "contraparte": "Termo 003",       "cantidadKwh": 157839 },
+    { "mercado": "Compra MR",  "contraparte": "Enerxia",         "cantidadKwh": 710971 },
+    { "mercado": "Compra MR",  "contraparte": "Nitro",           "cantidadKwh": 3828000 },
+    { "mercado": "Compra MR",  "contraparte": "Termo 004",       "cantidadKwh": 638093 },
+    { "mercado": "Compra MR",  "contraparte": "Santafe",         "cantidadKwh": 0 },
+    { "mercado": "Compra MR",  "contraparte": "Esprod",          "cantidadKwh": 1403226 },
+    { "mercado": "Compra MR",  "contraparte": "Bia Generador",   "cantidadKwh": 6313250 },
+    { "mercado": "Compra MNR", "contraparte": "AESP",            "cantidadKwh": 1694832 },
+    { "mercado": "Compra MNR", "contraparte": "Afinia",          "cantidadKwh": 2500004 },
+    { "mercado": "Compra MNR", "contraparte": "Carboenergy",     "cantidadKwh": 5952000 },
+    { "mercado": "Compra MNR", "contraparte": "EPM",             "cantidadKwh": 3102480 },
+    { "mercado": "Compra MNR", "contraparte": "Esprod Marco",    "cantidadKwh": 2744264 },
+    { "mercado": "Compra MNR", "contraparte": "Furesas",         "cantidadKwh": 1499904 },
+    { "mercado": "Compra MNR", "contraparte": "IA",              "cantidadKwh": 8472152 },
+    { "mercado": "Compra MNR", "contraparte": "Isagen PLG",      "cantidadKwh": 873615 },
+    { "mercado": "Compra MNR", "contraparte": "Isagen PLC",      "cantidadKwh": 967200 },
+    { "mercado": "Compra MNR", "contraparte": "Spectrum",        "cantidadKwh": 975879 },
+    { "mercado": "Compra MNR", "contraparte": "Proenergy PLC",   "cantidadKwh": 1973073 },
+    { "mercado": "Compra MNR", "contraparte": "Proenergy PLG",   "cantidadKwh": 1341797 },
+    { "mercado": "Compra MNR", "contraparte": "Esprod 0225",     "cantidadKwh": 1000003 },
+    { "mercado": "Compra MNR", "contraparte": "Esprod 1125",     "cantidadKwh": 1999998 },
+    { "mercado": "Compra MNR", "contraparte": "Granja Delta",    "cantidadKwh": 192985 },
+    { "mercado": "Compra MNR", "contraparte": "Naos",            "cantidadKwh": 186300 },
+    { "mercado": "Compra MNR", "contraparte": "Granja Polaris",  "cantidadKwh": 194195 },
+    { "mercado": "Compra MNR", "contraparte": "BIAG restante H0","cantidadKwh": 30469 },
+    { "mercado": "Compra MNR", "contraparte": "TERMO PLD",       "cantidadKwh": 354042 }
+  ],
+  "totalContratosSinBolsa": {
+    "kwhMes": 53239802,
+    "gwhMes": 53.2398,
+    "nota": "MR=17,184,609 + MNR=36,055,193 + Mayoristas=0"
+  },
+  "compraBolsa": {
+    "regulado":   { "kwhMes": 4625002 },
+    "noRegulado": { "kwhMes": 929937 },
+    "total":      { "kwhMes": 5554939, "gwhMes": 5.5549 }
+  },
+  "ventaBolsa": {
+    "regulado":   { "kwhMes": 37901 },
+    "noRegulado": { "kwhMes": 6433279 },
+    "total":      { "kwhMes": 6471180, "gwhMes": 6.4712 }
+  },
+  "totalCompra": { "kwhMes": 58794741, "gwhMes": 58.7947 },
+  "totalVenta":  { "kwhMes": 54662642, "gwhMes": 54.6626 }
+}

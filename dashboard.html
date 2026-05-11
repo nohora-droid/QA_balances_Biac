@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QA Balance Energético 2026 — BIA</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f0f4f8; color: #1a202c; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+/* ── Header ── */
+.header { background: linear-gradient(135deg, #1a365d, #2b6cb0); color: #fff; padding: 14px 24px; display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
+.header h1 { font-size: 1.2rem; font-weight: 700; }
+.header p  { font-size: 0.78rem; opacity: 0.8; margin-top: 2px; }
+.logo { font-size: 1.8rem; }
+
+/* ── 3-column layout ── */
+.layout { display: flex; flex: 1; overflow: hidden; }
+
+/* Col 1 — Months */
+.col-months { width: 170px; min-width: 170px; background: #fff; border-right: 1px solid #e2e8f0; overflow-y: auto; padding: 14px 10px; display: flex; flex-direction: column; gap: 12px; }
+.col-title { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #a0aec0; padding: 0 4px; }
+
+.month-card { border: 2px solid #e2e8f0; border-radius: 8px; padding: 9px 10px; cursor: pointer; transition: all 0.12s; background: #f7fafc; }
+.month-card:hover { border-color: #4299e1; background: #ebf8ff; }
+.month-card.active { border-color: #2b6cb0; background: #ebf8ff; box-shadow: 0 0 0 2px rgba(43,108,176,0.18); }
+.month-card.ok   { border-color: #68d391; background: #f0fff4; }
+.month-card.ok.active   { border-color: #276749; background: #c6f6d5; }
+.month-card.warn { border-color: #f6e05e; background: #fffff0; }
+.month-card.warn.active { border-color: #975a16; background: #fefcbf; }
+.month-card.err  { border-color: #fc8181; background: #fff5f5; }
+.month-card.err.active  { border-color: #c53030; background: #fed7d7; }
+.month-card.pending { opacity: 0.5; }
+.mc-top { display: flex; align-items: center; justify-content: space-between; }
+.mc-name { font-weight: 700; font-size: 0.82rem; }
+.mc-icon { font-size: 0.9rem; }
+.mc-sub  { font-size: 0.65rem; color: #718096; margin-top: 3px; }
+.mc-runs { font-size: 0.65rem; color: #4a5568; font-weight: 600; margin-top: 2px; }
+
+.legend { padding: 0 4px; }
+.legend-item { display: flex; align-items: center; gap: 7px; font-size: 0.7rem; color: #4a5568; margin-bottom: 5px; }
+.dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.dot-ok   { background: #48bb78; }
+.dot-warn { background: #ecc94b; }
+.dot-err  { background: #fc8181; }
+.dot-pend { background: #cbd5e0; }
+
+/* Col 2 — Run history */
+.col-runs { width: 240px; min-width: 240px; background: #f7fafc; border-right: 1px solid #e2e8f0; overflow-y: auto; padding: 14px 10px; display: flex; flex-direction: column; gap: 8px; }
+.col-runs-empty { padding: 40px 16px; text-align: center; color: #a0aec0; font-size: 0.8rem; }
+.col-runs-header { display: flex; align-items: center; justify-content: space-between; }
+
+.run-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 12px; cursor: pointer; transition: all 0.12s; }
+.run-card:hover { border-color: #4299e1; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+.run-card.active { border-color: #2b6cb0; box-shadow: 0 0 0 2px rgba(43,108,176,0.15); background: #ebf8ff; }
+.run-date { font-size: 0.78rem; font-weight: 700; color: #2d3748; }
+.run-time { font-size: 0.68rem; color: #718096; margin-top: 1px; }
+.run-pills { display: flex; gap: 4px; margin-top: 7px; flex-wrap: wrap; }
+.pill { display: inline-block; padding: 2px 7px; border-radius: 99px; font-size: 0.65rem; font-weight: 700; }
+.pill-ok   { background: #c6f6d5; color: #22543d; }
+.pill-warn { background: #fefcbf; color: #744210; }
+.pill-err  { background: #fed7d7; color: #742a2a; }
+.pill-ver  { background: #e9d8fd; color: #44337a; font-weight: 600; }
+
+/* Col 3 — Detail */
+.col-detail { flex: 1; overflow-y: auto; padding: 20px 24px; }
+
+/* ── Detail components ── */
+.panel-title { font-size: 1.15rem; font-weight: 700; color: #2d3748; }
+.panel-meta  { font-size: 0.78rem; color: #718096; margin-top: 3px; margin-bottom: 18px; }
+.run-exec-badge { display: inline-block; background: #e9d8fd; color: #44337a; border-radius: 6px; padding: 3px 10px; font-size: 0.72rem; font-weight: 700; margin-left: 10px; }
+
+.summary-row { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+.scard { background: #fff; border-radius: 8px; padding: 12px 16px; flex: 1; min-width: 110px; border-left: 4px solid #cbd5e0; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+.scard.ok   { border-left-color: #48bb78; }
+.scard.warn { border-left-color: #ecc94b; }
+.scard.err  { border-left-color: #fc8181; }
+.scard.neutral { border-left-color: #a0aec0; }
+.scard-val  { font-size: 1.5rem; font-weight: 800; }
+.scard-lbl  { font-size: 0.68rem; color: #718096; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px; }
+
+.section { background: #fff; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); margin-bottom: 16px; overflow: hidden; }
+.section-header { background: #2d3748; color: #fff; padding: 9px 14px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+th { background: #edf2f7; padding: 7px 12px; text-align: right; font-weight: 600; color: #4a5568; font-size: 0.72rem; white-space: nowrap; }
+th:first-child { text-align: left; }
+td { padding: 7px 12px; border-bottom: 1px solid #f7fafc; text-align: right; }
+td:first-child { text-align: left; font-weight: 500; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #f7fafc; }
+.num { font-variant-numeric: tabular-nums; }
+.tag { display: inline-block; padding: 1px 7px; border-radius: 99px; font-size: 0.68rem; font-weight: 700; }
+.tag-ok   { background: #c6f6d5; color: #22543d; }
+.tag-warn { background: #fefcbf; color: #744210; }
+.tag-err  { background: #fed7d7; color: #742a2a; }
+.tag-na   { background: #e2e8f0; color: #4a5568; }
+.sub-row td:first-child { padding-left: 26px; color: #718096; font-weight: 400; }
+
+.contracts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; padding: 14px; }
+@media (max-width: 900px) { .contracts-grid { grid-template-columns: 1fr; } }
+.ctable { font-size: 0.74rem; }
+.ctable th { font-size: 0.68rem; }
+
+.notes { background: #fffbeb; border: 1px solid #fbd38d; border-radius: 8px; padding: 14px; font-size: 0.76rem; color: #744210; margin-bottom: 16px; }
+.notes strong { display: block; margin-bottom: 6px; }
+.notes p { margin-bottom: 4px; }
+
+.actions { display: flex; gap: 8px; margin-bottom: 16px; align-items: center; flex-wrap: wrap; }
+.btn { padding: 6px 14px; border-radius: 6px; border: none; cursor: pointer; font-size: 0.78rem; font-weight: 600; }
+.btn-outline { background: #fff; color: #2b6cb0; border: 1px solid #bee3f8; }
+.btn-outline:hover { background: #ebf8ff; }
+.btn-print  { background: #fff; color: #4a5568; border: 1px solid #e2e8f0; }
+.btn-print:hover { background: #f7fafc; }
+
+.empty-state { text-align: center; padding: 60px 20px; color: #a0aec0; }
+.empty-state .icon { font-size: 2.8rem; margin-bottom: 12px; }
+.empty-state h2 { font-size: 1rem; color: #718096; margin-bottom: 8px; }
+.empty-state p  { font-size: 0.82rem; }
+.empty-state code { background: #edf2f7; padding: 2px 8px; border-radius: 4px; font-size: 0.76rem; color: #2d3748; }
+
+.pending-msg { background: #fff; border-radius: 10px; padding: 32px; text-align: center; color: #718096; }
+.pending-msg .icon { font-size: 2rem; margin-bottom: 10px; }
+.pending-msg h2 { font-size: 0.95rem; color: #4a5568; margin-bottom: 8px; }
+.pending-msg code { background: #edf2f7; padding: 4px 12px; border-radius: 4px; font-size: 0.8rem; color: #2d3748; display: inline-block; margin-top: 6px; }
+
+.loading { text-align: center; padding: 30px; color: #a0aec0; font-size: 0.85rem; }
+
+@media print {
+  .col-months, .col-runs, .actions { display: none; }
+  body { overflow: visible; }
+  .col-detail { padding: 0; }
+}
+</style>
+
+<!-- ── EMBEDDED FALLBACK DATA (works without a server) ── -->
+<script>
+window.__EMBEDDED_INDEX__ = {"runs":[{"key":"2026-01","file":"2026-01_2026-05-11_20-24-25.json","timestamp":"2026-05-11T20:24:25.423Z","period":"2026-01","apiVersion":"TxF","status":"warn"}]};
+window.__EMBEDDED_RUNS__ = {"2026-01_2026-05-11_20-24-25.json":{"generatedAt":"2026-05-11T20:24:25.423Z","period":"2026-01","year":2026,"month":1,"apiVersion":"TxF","comparisons":{"demanda_regulada_txf":{"label":"Demanda Regulada (TxF)","sheet_kwh":21331352,"api_kwh":21368437.909999985,"pct":0.1738563500334402,"note":"Col G vs DMRE matrices"},"demanda_regulada_plan":{"label":"Demanda Regulada (Plan)","sheet_kwh":18897328,"api_kwh":21368437.909999985,"pct":13.076504307910545,"note":"Col D vs DMRE matrices"},"demanda_nr_txf":{"label":"Demanda NR (TxF)","sheet_kwh":22591131,"api_kwh":22165717.89999999,"pct":-1.8830978404755783,"note":"Conceptos distintos"},"demanda_nr_plan":{"label":"Demanda NR (Plan)","sheet_kwh":21333415,"api_kwh":22165717.89999999,"pct":3.9014049086842926,"note":"Conceptos distintos"},"contratos_total":{"label":"Contratos compra (total)","sheet_kwh":53239802,"api_kwh":42532572.13077996,"pct":-20.1113254876869,"note":"API: TO o suma OR+DO+FE+SA"},"contratos_mr":{"label":"Contratos compra MR","sheet_kwh":17184609,"api_kwh":13577346.060000001,"pct":-20.992888498435537,"note":""},"contratos_mnr":{"label":"Contratos compra MNR","sheet_kwh":36055193,"api_kwh":28955226.070779957,"pct":-19.687237059124498,"note":""},"compra_bolsa_total":{"label":"Compra Bolsa TOTAL","sheet_kwh":5554939,"api_kwh":5554938.730000002,"pct":-0.000004860539381086274,"note":""},"compra_bolsa_reg":{"label":"Compra Bolsa Regulado","sheet_kwh":4625002,"api_kwh":4625002.110000003,"pct":0.000002378377417550173,"note":""},"compra_bolsa_nr":{"label":"Compra Bolsa No Regulado","sheet_kwh":929937,"api_kwh":929936.6199999996,"pct":-0.00004086298322939108,"note":""},"venta_bolsa_total":{"label":"Venta Bolsa TOTAL","sheet_kwh":6471180,"api_kwh":6471180.909999996,"pct":0.00001406235024251715,"note":""},"venta_bolsa_reg":{"label":"Venta Bolsa Regulado","sheet_kwh":37901,"api_kwh":37900.939999999995,"pct":-0.00015830716868934236,"note":""},"venta_bolsa_nr":{"label":"Venta Bolsa No Regulado","sheet_kwh":6433279,"api_kwh":6433279.969999996,"pct":0.00001507784748670063,"note":""}},"sheetContracts":[{"mercado":"Compra MR","contraparte":"AES","cantidadKwh":0},{"mercado":"Compra MR","contraparte":"Enermas","cantidadKwh":4133230},{"mercado":"Compra MR","contraparte":"Termo 003","cantidadKwh":157839},{"mercado":"Compra MR","contraparte":"Enerxia","cantidadKwh":710971},{"mercado":"Compra MR","contraparte":"Nitro","cantidadKwh":3828000},{"mercado":"Compra MR","contraparte":"Termo 004","cantidadKwh":638093},{"mercado":"Compra MR","contraparte":"Santafe","cantidadKwh":0},{"mercado":"Compra MR","contraparte":"Esprod","cantidadKwh":1403226},{"mercado":"Compra MR","contraparte":"Bia Generador","cantidadKwh":6313250},{"mercado":"Compra MNR","contraparte":"AESP","cantidadKwh":1694832},{"mercado":"Compra MNR","contraparte":"Afinia","cantidadKwh":2500004},{"mercado":"Compra MNR","contraparte":"Carboenergy","cantidadKwh":5952000},{"mercado":"Compra MNR","contraparte":"EPM","cantidadKwh":3102480},{"mercado":"Compra MNR","contraparte":"Esprod Marco","cantidadKwh":2744264},{"mercado":"Compra MNR","contraparte":"Furesas","cantidadKwh":1499904},{"mercado":"Compra MNR","contraparte":"IA","cantidadKwh":8472152},{"mercado":"Compra MNR","contraparte":"Isagen PLG","cantidadKwh":873615},{"mercado":"Compra MNR","contraparte":"Isagen PLC","cantidadKwh":967200},{"mercado":"Compra MNR","contraparte":"Spectrum","cantidadKwh":975879},{"mercado":"Compra MNR","contraparte":"Proenergy PLC","cantidadKwh":1973073},{"mercado":"Compra MNR","contraparte":"Proenergy PLG","cantidadKwh":1341797},{"mercado":"Compra MNR","contraparte":"Esprod 0225","cantidadKwh":1000003},{"mercado":"Compra MNR","contraparte":"Esprod 1125","cantidadKwh":1999998},{"mercado":"Compra MNR","contraparte":"Granja Delta","cantidadKwh":192985},{"mercado":"Compra MNR","contraparte":"Naos","cantidadKwh":186300},{"mercado":"Compra MNR","contraparte":"Granja Polaris","cantidadKwh":194195},{"mercado":"Compra MNR","contraparte":"BIAG restante H0","cantidadKwh":30469},{"mercado":"Compra MNR","contraparte":"TERMO PLD","cantidadKwh":354042}],"apiContracts":[{"number":"OS-001","provider":"SPRG","kWh":2343600},{"number":"BIAG-CMNR-002/2025","provider":"BIAG","kWh":0},{"number":"NTCG-BIAC-001-2025","provider":"NTCG","kWh":3828000},{"number":"CP-BIAC2023-00701","provider":"CHVG","kWh":0},{"number":"BIAG-CMR-001/2025","provider":"BIAG","kWh":6313250.380000001},{"number":"OM-SPRG-021-2025","provider":"SPRG","kWh":1403226.48},{"number":"FURE-054-07-2023","provider":"FERC","kWh":1499904},{"number":"EXIC0042025BIAC","provider":"EXIC","kWh":710970.96},{"number":"TERG-BIAC2025-003","provider":"TERG","kWh":168724.32},{"number":"CMMC-V-004-2023","provider":"CMMC","kWh":2500003.68},{"number":"TERG-BIAC2025-004","provider":"TERG","kWh":682099.2},{"number":"CBY-BIA 10-2023","provider":"CBYC","kWh":5952000},{"number":"OM-011-2025","provider":"SPRG","kWh":1999998.48},{"number":"CP-BIAC2022-002-01","provider":"NMRC","kWh":4133230},{"number":"BIAC-RTAC-01-2024","provider":"RTAC","kWh":1043181},{"number":"IAEC No. 001/2024","provider":"IAEC","kWh":8472151.509999959},{"number":"OM-004-2025","provider":"PRYC","kWh":1300795.3207799997},{"number":"EV-ENER-001-2025","provider":"UNGG","kWh":181436.8000000001}],"sheetTotals":{"totalCompra":58794741,"totalVenta":54662642},"apiTotals":{"dmre_kwh":21368437.909999985,"dmnr_kwh":22165717.89999999,"compra_bolsa_kwh":5554938.730000002,"venta_bolsa_kwh":6471180.909999996,"contratos_kwh":42532572.13077996}}};
+</script>
+</head>
+<body>
+
+<div class="header">
+  <span class="logo">⚡</span>
+  <div>
+    <h1>QA Balance Energético 2026 — BIA</h1>
+    <p id="headerSub">Validación Sheet vs API Olibia Energy · Versión TxF</p>
+  </div>
+</div>
+
+<div class="layout">
+
+  <!-- ── Col 1: Month selector ── -->
+  <div class="col-months">
+    <div class="col-title">Meses 2026</div>
+    <div id="monthList"></div>
+
+    <div style="margin-top:auto; padding-top:16px">
+      <div class="col-title" style="margin-bottom:8px">Leyenda</div>
+      <div class="legend">
+        <div class="legend-item"><span class="dot dot-ok"></span> ≤ 1% Correcto</div>
+        <div class="legend-item"><span class="dot dot-warn"></span> ≤ 5% Revisar</div>
+        <div class="legend-item"><span class="dot dot-err"></span> &gt; 5% Error</div>
+        <div class="legend-item"><span class="dot dot-pend"></span> Pendiente</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Col 2: Run history ── -->
+  <div class="col-runs" id="colRuns">
+    <div class="col-runs-empty">
+      <div style="font-size:1.5rem;margin-bottom:8px">🗂</div>
+      Selecciona un mes para ver su historial de ejecuciones
+    </div>
+  </div>
+
+  <!-- ── Col 3: Detail ── -->
+  <div class="col-detail" id="colDetail">
+    <div class="empty-state">
+      <div class="icon">📊</div>
+      <h2>Selecciona un mes y una ejecución</h2>
+      <p>Cada corrida queda guardada con su fecha exacta.<br>
+         Para agregar datos: <code>node run-qa.js 2026 M TOKEN</code></p>
+    </div>
+  </div>
+
+</div><!-- /layout -->
+
+<script>
+// ─────────────────────────────────────────────────────────────────────────────
+// Constants & state
+// ─────────────────────────────────────────────────────────────────────────────
+const MONTHS = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
+                'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+
+let index   = { runs: [] };      // index.json content
+let runCache = {};               // filename → full run data
+let selMonth = null;             // currently selected month number (1-12)
+let selFile  = null;             // currently selected run filename
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Bootstrap
+// ─────────────────────────────────────────────────────────────────────────────
+async function load() {
+  // Try server first, fallback to embedded
+  let loaded = false;
+  try {
+    const r = await fetch('qa-results/index.json');
+    if (r.ok) { index = await r.json(); loaded = true; }
+  } catch {}
+
+  if (!loaded && window.__EMBEDDED_INDEX__) {
+    index = window.__EMBEDDED_INDEX__;
+  }
+
+  // Pre-populate cache with any embedded run data
+  if (window.__EMBEDDED_RUNS__) {
+    Object.assign(runCache, window.__EMBEDDED_RUNS__);
+  }
+
+  renderMonths();
+
+  // Auto-select the most recent run's month
+  if (index.runs && index.runs.length) {
+    const latest = index.runs[index.runs.length - 1];
+    const mm = parseInt(latest.key.split('-')[1], 10);
+    selectMonth(mm, latest.file);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Helpers
+// ─────────────────────────────────────────────────────────────────────────────
+function runsForMonth(mm) {
+  const key = `2026-${String(mm).padStart(2,'0')}`;
+  return (index.runs || []).filter(r => r.key === key || r.period === key);
+}
+
+function bestStatus(mm) {
+  const runs = runsForMonth(mm);
+  if (!runs.length) return 'pending';
+  // Show status of the latest run
+  const latest = runs[runs.length - 1];
+  return latest.status || 'pending';
+}
+
+function fmtN(n) {
+  if (n == null || isNaN(n)) return '—';
+  return Number(n).toLocaleString('es-CO', { maximumFractionDigits: 0 });
+}
+function fmtPct(p) {
+  if (p == null || isNaN(p)) return '—';
+  return (p >= 0 ? '+' : '') + Number(p).toFixed(2) + '%';
+}
+function pctTag(p) {
+  if (p == null || isNaN(p)) return '<span class="tag tag-na">N/A</span>';
+  const a = Math.abs(p);
+  const cls  = a <= 1 ? 'tag-ok' : a <= 5 ? 'tag-warn' : 'tag-err';
+  const icon = a <= 1 ? '✅' : a <= 5 ? '⚠️' : '❌';
+  return `<span class="tag ${cls}">${icon} ${fmtPct(p)}</span>`;
+}
+function statusIcon(st) {
+  return { ok:'✅', warn:'⚠️', err:'❌', pending:'—' }[st] || '—';
+}
+function countsByStatus(comparisons) {
+  const c = { ok:0, warn:0, err:0 };
+  Object.values(comparisons || {}).forEach(v => {
+    if (v.pct == null) return;
+    const a = Math.abs(v.pct);
+    if (a <= 1) c.ok++; else if (a <= 5) c.warn++; else c.err++;
+  });
+  return c;
+}
+function fmtTs(ts) {
+  // "2026-05-11T20:24:25.423Z" → date + time parts
+  if (!ts) return ['—',''];
+  const d = new Date(ts);
+  if (isNaN(d)) return [ts, ''];
+  const date = d.toLocaleDateString('es-CO', { day:'2-digit', month:'short', year:'numeric', timeZone:'UTC' });
+  const time = d.toLocaleTimeString('es-CO', { hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false, timeZone:'UTC' }) + ' UTC';
+  return [date, time];
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Col 1: Months
+// ─────────────────────────────────────────────────────────────────────────────
+function renderMonths() {
+  const el = document.getElementById('monthList');
+  el.innerHTML = '';
+  MONTHS.forEach((name, i) => {
+    const mm  = i + 1;
+    const st  = bestStatus(mm);
+    const cnt = runsForMonth(mm).length;
+    const div = document.createElement('div');
+    div.id = `mc-${mm}`;
+    div.className = `month-card ${st === 'pending' ? 'pending' : st}`;
+    div.innerHTML = `
+      <div class="mc-top">
+        <span class="mc-name">${name}</span>
+        <span class="mc-icon">${statusIcon(st)}</span>
+      </div>
+      ${cnt ? `<div class="mc-runs">${cnt} ejecución${cnt !== 1 ? 'es' : ''}</div>` : '<div class="mc-sub">Sin datos</div>'}`;
+    div.onclick = () => selectMonth(mm);
+    el.appendChild(div);
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Col 2: Run history
+// ─────────────────────────────────────────────────────────────────────────────
+function renderRunList(mm) {
+  const col  = document.getElementById('colRuns');
+  const runs = runsForMonth(mm);
+  const name = MONTHS[mm - 1];
+
+  if (!runs.length) {
+    col.innerHTML = `
+      <div class="col-title">${name} — Ejecuciones</div>
+      <div class="col-runs-empty">
+        Sin datos para este mes.<br><br>
+        <code style="font-size:0.68rem;background:#edf2f7;padding:3px 8px;border-radius:4px">node run-qa.js 2026 ${mm} TOKEN</code>
+      </div>`;
+    return;
+  }
+
+  const items = [...runs].reverse(); // newest first
+  const cards = items.map((run, idx) => {
+    const [date, time] = fmtTs(run.timestamp);
+    const pills = runPills(run);
+    const isLatest = idx === 0;
+    return `
+      <div id="rc-${run.file}" class="run-card${selFile === run.file ? ' active' : ''}" onclick="selectRun('${run.file}')">
+        <div class="run-date">${date}${isLatest ? ' <span style="font-size:0.6rem;background:#c6f6d5;color:#22543d;padding:1px 5px;border-radius:4px;vertical-align:middle">MÁS RECIENTE</span>' : ''}</div>
+        <div class="run-time">${time}</div>
+        <div class="run-pills">${pills}</div>
+      </div>`;
+  }).join('');
+
+  col.innerHTML = `
+    <div class="col-title" style="margin-bottom:8px">${name} — ${runs.length} ejecución${runs.length !== 1 ? 'es' : ''}</div>
+    ${cards}`;
+}
+
+function runPills(run) {
+  // Try to get counts from cached run data
+  const data = runCache[run.file];
+  if (data && data.comparisons) {
+    const c = countsByStatus(data.comparisons);
+    const ver = run.apiVersion ? `<span class="pill pill-ver">${run.apiVersion}</span>` : '';
+    return `${ver}<span class="pill pill-ok">✅ ${c.ok}</span><span class="pill pill-warn">⚠️ ${c.warn}</span><span class="pill pill-err">❌ ${c.err}</span>`;
+  }
+  // Fallback to status only
+  const ver = run.apiVersion ? `<span class="pill pill-ver">${run.apiVersion}</span>` : '';
+  const st = run.status || 'pending';
+  const badge = st === 'ok' ? '<span class="pill pill-ok">✅ ok</span>'
+               : st === 'warn' ? '<span class="pill pill-warn">⚠️ warn</span>'
+               : st === 'err'  ? '<span class="pill pill-err">❌ err</span>'
+               : '';
+  return ver + badge;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Selection logic
+// ─────────────────────────────────────────────────────────────────────────────
+function selectMonth(mm, autoFile = null) {
+  selMonth = mm;
+  document.querySelectorAll('.month-card').forEach(c => c.classList.remove('active'));
+  const mc = document.getElementById(`mc-${mm}`);
+  if (mc) mc.classList.add('active');
+
+  renderRunList(mm);
+
+  // Auto-select a run: explicit file or latest for this month
+  const runs = runsForMonth(mm);
+  const target = autoFile || (runs.length ? runs[runs.length - 1].file : null);
+  if (target) {
+    selectRun(target);
+  } else {
+    selFile = null;
+    renderPending(mm);
+  }
+}
+
+async function selectRun(file) {
+  selFile = file;
+
+  // Highlight active run card
+  document.querySelectorAll('.run-card').forEach(c => c.classList.remove('active'));
+  const rc = document.getElementById(`rc-${file}`);
+  if (rc) rc.classList.add('active');
+
+  // Load run data if not cached
+  if (!runCache[file]) {
+    document.getElementById('colDetail').innerHTML = '<div class="loading">Cargando...</div>';
+    try {
+      const r = await fetch(`qa-results/${file}`);
+      if (r.ok) runCache[file] = await r.json();
+    } catch {}
+  }
+
+  const data = runCache[file];
+  if (data) {
+    renderDetail(data, file);
+    // Re-render run pills now that we have full data
+    renderRunList(selMonth);
+    // Re-highlight after re-render
+    const rc2 = document.getElementById(`rc-${file}`);
+    if (rc2) rc2.classList.add('active');
+  } else {
+    document.getElementById('colDetail').innerHTML =
+      `<div class="pending-msg"><div class="icon">❌</div><h2>No se pudo cargar ${file}</h2></div>`;
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Col 3: Detail
+// ─────────────────────────────────────────────────────────────────────────────
+function renderPending(mm) {
+  const name = MONTHS[mm - 1];
+  document.getElementById('colDetail').innerHTML = `
+    <div class="pending-msg">
+      <div class="icon">🕐</div>
+      <h2>${name} 2026 — Sin datos de QA</h2>
+      <p>Obtén un Bearer token de la app y ejecuta:</p>
+      <code>node run-qa.js 2026 ${mm} TU_TOKEN</code>
+    </div>`;
+}
+
+function renderDetail(res, file) {
+  const mm   = String(res.month || 1).padStart(2,'0');
+  const name = MONTHS[(res.month || 1) - 1];
+  const cmp  = res.comparisons || {};
+  const counts = countsByStatus(cmp);
+  const [date, time] = fmtTs(res.generatedAt);
+  const st = counts.err > 0 ? 'err' : counts.warn > 0 ? 'warn' : 'ok';
+
+  document.getElementById('colDetail').innerHTML = `
+    <div class="actions">
+      <div style="flex:1">
+        <div class="panel-title">⚡ ${name} 2026
+          <span class="run-exec-badge">Ejecutado: ${date} ${time}</span>
+        </div>
+        <div class="panel-meta">Versión API: <strong>${res.apiVersion || '—'}</strong> · Archivo: <code style="font-size:0.72rem">${file}</code></div>
+      </div>
+      <button class="btn btn-print" onclick="window.print()">🖨 Imprimir</button>
+      <button class="btn btn-outline" onclick="downloadJSON('${file}')">⬇ JSON</button>
+    </div>
+
+    <!-- Summary cards -->
+    <div class="summary-row">
+      <div class="scard ok"><div class="scard-val">${counts.ok}</div><div class="scard-lbl">✅ Correctos ≤1%</div></div>
+      <div class="scard warn"><div class="scard-val">${counts.warn}</div><div class="scard-lbl">⚠️ Revisar ≤5%</div></div>
+      <div class="scard err"><div class="scard-val">${counts.err}</div><div class="scard-lbl">❌ Error &gt;5%</div></div>
+      <div class="scard neutral">
+        <div class="scard-val">${statusIcon(st)}</div>
+        <div class="scard-lbl">Estado general</div>
+      </div>
+    </div>
+
+    ${compTable('DEMANDA', [
+      { label:'Dem. Regulada (TxF)',  c: cmp.demanda_regulada_txf },
+      { label:'Dem. Regulada (Plan)', c: cmp.demanda_regulada_plan, sub: true },
+      { label:'Dem. No Regulada (TxF)',  c: cmp.demanda_nr_txf,  note: '⚠ Conceptos distintos' },
+      { label:'Dem. No Regulada (Plan)', c: cmp.demanda_nr_plan, sub: true, note: '⚠ Conceptos distintos' },
+    ])}
+
+    ${compTable('CONTRATOS COMPRA', [
+      { label:'Total contratos',  c: cmp.contratos_total },
+      { label:'→ Compra MR',      c: cmp.contratos_mr,  sub: true },
+      { label:'→ Compra MNR',     c: cmp.contratos_mnr, sub: true },
+    ])}
+
+    ${compTable('COMPRA BOLSA — official_balcttos', [
+      { label:'Compra Bolsa TOTAL',         c: cmp.compra_bolsa_total },
+      { label:'→ Compra Bolsa Regulado',    c: cmp.compra_bolsa_reg,  sub: true },
+      { label:'→ Compra Bolsa No Regulado', c: cmp.compra_bolsa_nr,   sub: true },
+    ])}
+
+    ${compTable('VENTA BOLSA — official_balcttos', [
+      { label:'Venta Bolsa TOTAL',         c: cmp.venta_bolsa_total },
+      { label:'→ Venta Bolsa Regulado',    c: cmp.venta_bolsa_reg,  sub: true },
+      { label:'→ Venta Bolsa No Regulado', c: cmp.venta_bolsa_nr,   sub: true },
+    ])}
+
+    <!-- Contract detail -->
+    <div class="section">
+      <div class="section-header">DETALLE CONTRATOS</div>
+      <div class="contracts-grid">
+        <div>
+          <div style="font-size:0.68rem;font-weight:700;color:#718096;margin-bottom:8px;text-transform:uppercase">Sheet (${(res.sheetContracts||[]).filter(c=>c.cantidadKwh>0).length} contratos activos)</div>
+          ${contractsTable(res.sheetContracts || [], false)}
+        </div>
+        <div>
+          <div style="font-size:0.68rem;font-weight:700;color:#718096;margin-bottom:8px;text-transform:uppercase">API (${(res.apiContracts||[]).filter(c=>c.kWh>0).length} contratos activos)</div>
+          ${contractsTable(res.apiContracts || [], true)}
+        </div>
+      </div>
+    </div>
+
+    <div class="notes">
+      <strong>Notas metodológicas</strong>
+      <p><strong>Dem. No Regulada:</strong> Sheet = entrega total NR (contratos+bolsa). API DMNR = demanda PTB. Conceptos distintos — comparar con cautela.</p>
+      <p><strong>Contratos API:</strong> Usa day_type=TO si existe; si no, suma OR+DO+FE+SA. Pueden faltar contratos no registrados en la API.</p>
+      <p><strong>Bolsa:</strong> <code>official_balcttos</code> = "BALANCE TRANSACCIONES DE BOLSA — Propio" del sheet. Coincidencia exacta esperada.</p>
+    </div>
+  `;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Table builders
+// ─────────────────────────────────────────────────────────────────────────────
+function compTable(title, rows) {
+  const body = rows.map(r => {
+    const c    = r.c || {};
+    const note = r.note ? `<small style="color:#975a16;font-weight:400"> ${r.note}</small>` : '';
+    const trCls = r.sub ? ' class="sub-row"' : '';
+    return `<tr${trCls}>
+      <td>${r.label}${note}</td>
+      <td class="num">${fmtN(c.sheet_kwh)}</td>
+      <td class="num">${fmtN(c.api_kwh)}</td>
+      <td>${pctTag(c.pct)}</td>
+    </tr>`;
+  }).join('');
+  return `<div class="section">
+    <div class="section-header">${title}</div>
+    <table>
+      <thead><tr><th>Variable</th><th>Sheet (kWh)</th><th>API (kWh)</th><th>Δ%</th></tr></thead>
+      <tbody>${body}</tbody>
+    </table>
+  </div>`;
+}
+
+function contractsTable(items, isApi) {
+  const active = (items || []).filter(c => (c.cantidadKwh || c.kWh || 0) > 0)
+    .sort((a, b) => (b.cantidadKwh || b.kWh || 0) - (a.cantidadKwh || a.kWh || 0));
+  if (!active.length) return '<p style="color:#a0aec0;font-size:0.78rem;padding:8px">Sin datos</p>';
+  const rows = active.map(c => {
+    const name = isApi ? (c.number || '—') : (c.contraparte || '—');
+    const mkt  = isApi ? (c.provider || '') : (c.mercado || '');
+    const kwh  = c.cantidadKwh || c.kWh || 0;
+    return `<tr><td>${name}</td><td style="color:#718096;font-size:0.68rem">${mkt}</td><td class="num">${fmtN(kwh)}</td></tr>`;
+  }).join('');
+  const total = active.reduce((s, c) => s + (c.cantidadKwh || c.kWh || 0), 0);
+  return `<table class="ctable">
+    <thead><tr><th style="text-align:left">Nombre</th><th>Tipo</th><th>kWh</th></tr></thead>
+    <tbody>${rows}</tbody>
+    <tfoot><tr>
+      <td colspan="2" style="font-weight:700;font-size:0.72rem;color:#4a5568">TOTAL</td>
+      <td class="num" style="font-weight:700">${fmtN(total)}</td>
+    </tr></tfoot>
+  </table>`;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Download
+// ─────────────────────────────────────────────────────────────────────────────
+function downloadJSON(file) {
+  const data = runCache[file];
+  if (!data) return;
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = file;
+  a.click();
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Start
+// ─────────────────────────────────────────────────────────────────────────────
+load();
+</script>
+</body>
+</html>

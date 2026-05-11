@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+
+# Raw API dumps (large, sensitive)
+api-*.json
+gviz-*.json
+sheet-html-snippet.txt
+map-cells-output.json
+
+# Tokens / secrets
+.env
+*.token
+
+# Generated (reproducible)
+reporte-qa-2026.html
+qa-report.json
+
+# OS / editor
+.DS_Store
+Thumbs.db
