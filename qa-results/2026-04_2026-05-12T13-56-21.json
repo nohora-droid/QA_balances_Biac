@@ -1,0 +1,400 @@
+{
+  "generatedAt": "2026-05-12T13:56:21.525Z",
+  "period": "2026-04",
+  "year": 2026,
+  "month": 4,
+  "apiVersion": "TxF",
+  "comparisons": {
+    "demanda_regulada_txf": {
+      "label": "Demanda Regulada (TxF)",
+      "sheet_kwh": 22870625,
+      "api_kwh": 22544956.179999996,
+      "pct": -1.4239611729019388,
+      "note": "Col G sheet vs DMRE matrices"
+    },
+    "demanda_regulada_plan": {
+      "label": "Demanda Regulada (Plan)",
+      "sheet_kwh": 20126150,
+      "api_kwh": 22544956.179999996,
+      "pct": 12.01822593988416,
+      "note": "Col D sheet vs DMRE matrices"
+    },
+    "demanda_nr_txf": {
+      "label": "Demanda NR (TxF)",
+      "sheet_kwh": 23541770,
+      "api_kwh": 23198959.170000006,
+      "pct": -1.456181204726724,
+      "note": "⚠ Conceptos distintos"
+    },
+    "demanda_nr_plan": {
+      "label": "Demanda NR (Plan)",
+      "sheet_kwh": 22129264,
+      "api_kwh": 23198959.170000006,
+      "pct": 4.8338488347375925,
+      "note": "⚠ Conceptos distintos"
+    },
+    "contratos_total": {
+      "label": "Contratos compra (total)",
+      "sheet_kwh": 46463081,
+      "api_kwh": 46463081.85000003,
+      "pct": 0.0000018294095290246433,
+      "note": "Sheet=MR+MNR+May, API=TO Compra"
+    },
+    "contratos_mr": {
+      "label": "Contratos compra MR",
+      "sheet_kwh": 15471332,
+      "api_kwh": 15471331.060000272,
+      "pct": -0.000006075751768058933,
+      "note": ""
+    },
+    "contratos_mnr": {
+      "label": "Contratos compra MNR",
+      "sheet_kwh": 30991749,
+      "api_kwh": 30991750.789999757,
+      "pct": 0.000005775730040153787,
+      "note": ""
+    },
+    "compra_bolsa_total": {
+      "label": "Compra Bolsa TOTAL",
+      "sheet_kwh": 10489174,
+      "api_kwh": 10489174.749999998,
+      "pct": 0.000007150229352066758,
+      "note": ""
+    },
+    "compra_bolsa_reg": {
+      "label": "Compra Bolsa Regulado",
+      "sheet_kwh": 7414573,
+      "api_kwh": 7414573.48,
+      "pct": 0.0000064737376035954435,
+      "note": ""
+    },
+    "compra_bolsa_nr": {
+      "label": "Compra Bolsa No Regulado",
+      "sheet_kwh": 3074600,
+      "api_kwh": 3074601.2699999977,
+      "pct": 0.000041306186095437455,
+      "note": ""
+    },
+    "venta_bolsa_total": {
+      "label": "Venta Bolsa TOTAL",
+      "sheet_kwh": 3219859,
+      "api_kwh": 3219858.7399999965,
+      "pct": -0.000008074887860051414,
+      "note": ""
+    },
+    "venta_bolsa_reg": {
+      "label": "Venta Bolsa Regulado",
+      "sheet_kwh": 15279,
+      "api_kwh": 15279.41,
+      "pct": 0.002683421689900219,
+      "note": ""
+    },
+    "venta_bolsa_nr": {
+      "label": "Venta Bolsa No Regulado",
+      "sheet_kwh": 3204580,
+      "api_kwh": 3204579.3299999963,
+      "pct": -0.00002090757614572844,
+      "note": ""
+    }
+  },
+  "sheetContracts": [
+    {
+      "mercado": "Compra MR",
+      "contraparte": "AES",
+      "cantidadKwh": 0
+    },
+    {
+      "mercado": "Compra MR",
+      "contraparte": "Enermas",
+      "cantidadKwh": 3999900
+    },
+    {
+      "mercado": "Compra MR",
+      "contraparte": "Termo 003",
+      "cantidadKwh": 163282
+    },
+    {
+      "mercado": "Compra MR",
+      "contraparte": "Enerxia",
+      "cantidadKwh": 30002
+    },
+    {
+      "mercado": "Compra MR",
+      "contraparte": "Nitro",
+      "cantidadKwh": 3960000
+    },
+    {
+      "mercado": "Compra MR",
+      "contraparte": "Termo 004",
+      "cantidadKwh": 660096
+    },
+    {
+      "mercado": "Compra MR",
+      "contraparte": "Santafe",
+      "cantidadKwh": 387936
+    },
+    {
+      "mercado": "Compra MR",
+      "contraparte": "Esprod",
+      "cantidadKwh": 1000001
+    },
+    {
+      "mercado": "Compra MR",
+      "contraparte": "Bia Generador",
+      "cantidadKwh": 4332903
+    },
+    {
+      "mercado": "Compra MR",
+      "contraparte": "Bia Generador 2",
+      "cantidadKwh": 937212
+    },
+    {
+      "mercado": "Compra MNR",
+      "contraparte": "AESP",
+      "cantidadKwh": 1640160
+    },
+    {
+      "mercado": "Compra MNR",
+      "contraparte": "Afinia",
+      "cantidadKwh": 2499998
+    },
+    {
+      "mercado": "Compra MNR",
+      "contraparte": "Carboenergy",
+      "cantidadKwh": 5760000
+    },
+    {
+      "mercado": "Compra MNR",
+      "contraparte": "EPM",
+      "cantidadKwh": 3002400
+    },
+    {
+      "mercado": "Compra MNR",
+      "contraparte": "Esprod Marco",
+      "cantidadKwh": 2683780
+    },
+    {
+      "mercado": "Compra MNR",
+      "contraparte": "Furesas",
+      "cantidadKwh": 1499760
+    },
+    {
+      "mercado": "Compra MNR",
+      "contraparte": "IA",
+      "cantidadKwh": 6862768
+    },
+    {
+      "mercado": "Compra MNR",
+      "contraparte": "Isagen PLG",
+      "cantidadKwh": 143081
+    },
+    {
+      "mercado": "Compra MNR",
+      "contraparte": "Isagen PLC",
+      "cantidadKwh": 936000
+    },
+    {
+      "mercado": "Compra MNR",
+      "contraparte": "Spectrum",
+      "cantidadKwh": 1009530
+    },
+    {
+      "mercado": "Compra MNR",
+      "contraparte": "Proenergy PLC",
+      "cantidadKwh": 2041110
+    },
+    {
+      "mercado": "Compra MNR",
+      "contraparte": "Proenergy PLG",
+      "cantidadKwh": 1398672
+    },
+    {
+      "mercado": "Compra MNR",
+      "contraparte": "Esprod 0225",
+      "cantidadKwh": 0
+    },
+    {
+      "mercado": "Compra MNR",
+      "contraparte": "Esprod 1125",
+      "cantidadKwh": 0
+    },
+    {
+      "mercado": "Compra MNR",
+      "contraparte": "Granja Delta",
+      "cantidadKwh": 190363
+    },
+    {
+      "mercado": "Compra MNR",
+      "contraparte": "Naos",
+      "cantidadKwh": 178305
+    },
+    {
+      "mercado": "Compra MNR",
+      "contraparte": "Granja Polaris",
+      "cantidadKwh": 189804
+    },
+    {
+      "mercado": "Compra MNR",
+      "contraparte": "BIAG restante H0",
+      "cantidadKwh": 956018
+    },
+    {
+      "mercado": "Compra MNR",
+      "contraparte": "TERMO PLD",
+      "cantidadKwh": 0
+    }
+  ],
+  "apiContracts": [
+    {
+      "number": "66919",
+      "market_type": "N",
+      "kWh": 936000
+    },
+    {
+      "number": "66970",
+      "market_type": "N",
+      "kWh": 143081.28
+    },
+    {
+      "number": "68371",
+      "market_type": "R",
+      "kWh": 3999900
+    },
+    {
+      "number": "70742",
+      "market_type": "N",
+      "kWh": 3002400
+    },
+    {
+      "number": "74675",
+      "market_type": "N",
+      "kWh": 1499760
+    },
+    {
+      "number": "74679",
+      "market_type": "N",
+      "kWh": 2499998.400000009
+    },
+    {
+      "number": "78860",
+      "market_type": "N",
+      "kWh": 5760000
+    },
+    {
+      "number": "79030",
+      "market_type": "N",
+      "kWh": 1640160
+    },
+    {
+      "number": "84390",
+      "market_type": "N",
+      "kWh": 6862768.199999999
+    },
+    {
+      "number": "86719",
+      "market_type": "N",
+      "kWh": 2683780.119999999
+    },
+    {
+      "number": "87346",
+      "market_type": "N",
+      "kWh": 2041110
+    },
+    {
+      "number": "87521",
+      "market_type": "R",
+      "kWh": 163281.59999999928
+    },
+    {
+      "number": "87522",
+      "market_type": "R",
+      "kWh": 30002.399999999456
+    },
+    {
+      "number": "87541",
+      "market_type": "N",
+      "kWh": 1009530
+    },
+    {
+      "number": "87551",
+      "market_type": "N",
+      "kWh": 190363.30000000002
+    },
+    {
+      "number": "87552",
+      "market_type": "N",
+      "kWh": 178304.9700000001
+    },
+    {
+      "number": "87553",
+      "market_type": "N",
+      "kWh": 189804.30000000013
+    },
+    {
+      "number": "87717",
+      "market_type": "R",
+      "kWh": 660096.0000000022
+    },
+    {
+      "number": "87721",
+      "market_type": "R",
+      "kWh": 3960000
+    },
+    {
+      "number": "87724",
+      "market_type": "R",
+      "kWh": 1000000.8000000087
+    },
+    {
+      "number": "87725",
+      "market_type": "R",
+      "kWh": 387935.999999995
+    },
+    {
+      "number": "87751",
+      "market_type": "N",
+      "kWh": 1398672.1999999997
+    },
+    {
+      "number": "88305",
+      "market_type": "N",
+      "kWh": 2000001.6000000173
+    },
+    {
+      "number": "88412",
+      "market_type": "R",
+      "kWh": 4332902.700000001
+    },
+    {
+      "number": "88503",
+      "market_type": "N",
+      "kWh": 1000000.8000000087
+    },
+    {
+      "number": "88710",
+      "market_type": "N",
+      "kWh": 956018.0200000011
+    },
+    {
+      "number": "88867",
+      "market_type": "N",
+      "kWh": 4320000
+    },
+    {
+      "number": "89121",
+      "market_type": "R",
+      "kWh": 937211.5599999983
+    }
+  ],
+  "sheetTotals": {
+    "totalCompra": 56952256,
+    "totalVenta": 52795274
+  },
+  "apiTotals": {
+    "dmre_kwh": 22544956.179999996,
+    "dmnr_kwh": 23198959.170000006,
+    "compra_bolsa_kwh": 10489174.749999998,
+    "venta_bolsa_kwh": 3219858.7399999965,
+    "contratos_kwh": 46463081.85000003
+  }
+}

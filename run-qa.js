@@ -91,8 +91,20 @@ async function main() {
   }
   console.log(`   Versión: ${versionName}`);
 
-  // 2. Matrices — demanda + dispatch_desp (contratos energía despachada)
-  console.log('2. balance/matrices...');
+  // 2. /contracts catalog — sic_codes de contratos Venta NR (necesario antes de matrices)
+  console.log('2. contracts (catalog)...');
+  const ctCat = await apiGet(`/contracts?limit=500&offset=0`);
+  const allContracts = (ctCat.status === 200 && ctCat.data.items) ? ctCat.data.items : [];
+  const ventaNRSicCodes = new Set(
+    allContracts
+      .filter(c => c.operation === 'Venta' && c.type === 'NO REGULADO' && c.sic_code)
+      .map(c => c.sic_code)
+  );
+  console.log(`   Contratos Venta NR (excluir de dispatch_desp MNR): ${[...ventaNRSicCodes].join(', ')}`);
+  const compras = []; // kept for backward compat
+
+  // 3. Matrices — demanda + dispatch_desp (contratos energía despachada)
+  console.log('3. balance/matrices...');
   const mat = await apiGet(`/balance/matrices?year=${YEAR}&month=${MONTH}&version_name=${encodeURIComponent(versionName)}`);
   if (mat.status !== 200) { console.error('   ❌ Error matrices:', mat.status); process.exit(1); }
   const demTotals = {};
@@ -102,14 +114,15 @@ async function main() {
   console.log(`   DMRE=${(api_dmre/1e6).toFixed(3)} GWh  DMNR=${(api_dmnr/1e6).toFixed(3)} GWh`);
 
   // dispatch_desp: contratos energía despachada — fuente usada por la app
+  // MNR: excluir contratos Venta NR (sic_codes de /contracts) para quedarse solo con Compra MNR
   const dd = mat.data.dispatch_desp || [];
   const api_cttosMR  = dd.filter(r => r.market_type === 'R').reduce((s, r) => s + r.value, 0);
-  const api_cttosMNR = dd.filter(r => r.market_type === 'N').reduce((s, r) => s + r.value, 0);
+  const api_cttosMNR = dd.filter(r => r.market_type === 'N' && !ventaNRSicCodes.has(r.contract)).reduce((s, r) => s + r.value, 0);
   const api_cttos    = api_cttosMR + api_cttosMNR;
-  console.log(`   Contratos dispatch_desp: MR=${(api_cttosMR/1e6).toFixed(3)} GWh  MNR=${(api_cttosMNR/1e6).toFixed(3)} GWh`);
+  console.log(`   Contratos dispatch_desp: MR=${(api_cttosMR/1e6).toFixed(3)} GWh  MNR (compra)=${(api_cttosMNR/1e6).toFixed(3)} GWh`);
 
-  // 3. Reconciliation
-  console.log('3. balance/reconciliation...');
+  // 4. Reconciliation
+  console.log('4. balance/reconciliation...');
   const rec = await apiGet(`/balance/reconciliation?year=${YEAR}&month=${MONTH}&version_name=${encodeURIComponent(versionName)}`);
   if (rec.status !== 200) { console.error('   ❌ Error reconciliation:', rec.status); process.exit(1); }
   const ob = rec.data.official_balcttos;
@@ -120,10 +133,6 @@ async function main() {
   const api_vBolsaNR   = ob.ventas_no_regulado_mwh;
   const api_ventaBolsa  = api_vBolsaReg + api_vBolsaNR;
   console.log(`   Compra bolsa: ${(api_compraBolsa/1e6).toFixed(3)} GWh  Venta bolsa: ${(api_ventaBolsa/1e6).toFixed(3)} GWh`);
-
-  // 4. contracts/monthly — referencia adicional (no es la fuente principal)
-  const compras = []; // kept for apiContracts detail in saved JSON
-  console.log(`   (contracts/monthly omitido — usando dispatch_desp de matrices)`);
 
   // ── Sheet references ──────────────────────────────────────────────────────────
   const sh = {

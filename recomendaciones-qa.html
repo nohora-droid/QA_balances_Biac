@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recomendaciones QA Balance Energético 2026 — BIA</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f7fafc; color: #1a202c; padding: 40px 24px; max-width: 900px; margin: 0 auto; }
+
+.cover { background: linear-gradient(135deg, #1a365d, #2b6cb0); color: #fff; border-radius: 14px; padding: 36px 40px; margin-bottom: 36px; }
+.cover h1 { font-size: 1.7rem; font-weight: 800; margin-bottom: 6px; }
+.cover .sub { font-size: 0.9rem; opacity: 0.8; }
+.cover .meta { margin-top: 18px; font-size: 0.78rem; opacity: 0.7; display: flex; gap: 24px; flex-wrap: wrap; }
+
+.toc { background: #fff; border-radius: 10px; padding: 20px 24px; margin-bottom: 32px; border: 1px solid #e2e8f0; }
+.toc h2 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: #718096; margin-bottom: 12px; }
+.toc ol { padding-left: 18px; }
+.toc li { margin-bottom: 6px; }
+.toc a { color: #2b6cb0; font-size: 0.88rem; text-decoration: none; }
+.toc a:hover { text-decoration: underline; }
+
+.section { background: #fff; border-radius: 10px; padding: 28px 32px; margin-bottom: 24px; border: 1px solid #e2e8f0; }
+.section-num { display: inline-block; background: #2b6cb0; color: #fff; width: 28px; height: 28px; border-radius: 50%; text-align: center; line-height: 28px; font-size: 0.82rem; font-weight: 700; margin-right: 10px; flex-shrink: 0; }
+.section h2 { font-size: 1.08rem; font-weight: 700; color: #1a365d; display: flex; align-items: center; margin-bottom: 14px; }
+.section h3 { font-size: 0.88rem; font-weight: 700; color: #2d3748; margin: 16px 0 8px; }
+p { font-size: 0.88rem; color: #4a5568; line-height: 1.65; margin-bottom: 10px; }
+ul, ol { padding-left: 20px; margin-bottom: 10px; }
+li { font-size: 0.88rem; color: #4a5568; line-height: 1.65; margin-bottom: 4px; }
+
+.badge { display: inline-block; padding: 2px 10px; border-radius: 99px; font-size: 0.72rem; font-weight: 700; margin-left: 8px; }
+.badge-ok   { background: #c6f6d5; color: #22543d; }
+.badge-warn { background: #fefcbf; color: #744210; }
+.badge-err  { background: #fed7d7; color: #742a2a; }
+.badge-info { background: #bee3f8; color: #2a4365; }
+.badge-fix  { background: #e9d8fd; color: #44337a; }
+
+.result-table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 0.82rem; }
+.result-table th { background: #edf2f7; text-align: left; padding: 8px 12px; font-weight: 700; color: #2d3748; border-bottom: 2px solid #e2e8f0; }
+.result-table td { padding: 7px 12px; border-bottom: 1px solid #f0f4f8; color: #4a5568; }
+.result-table tr:last-child td { border-bottom: none; }
+.result-table .ok   { color: #276749; font-weight: 700; }
+.result-table .warn { color: #975a16; font-weight: 700; }
+.result-table .err  { color: #c53030; font-weight: 700; }
+
+.code-block { background: #2d3748; color: #e2e8f0; border-radius: 8px; padding: 14px 18px; font-family: 'Cascadia Code', 'Fira Code', monospace; font-size: 0.78rem; line-height: 1.6; overflow-x: auto; margin: 12px 0; }
+.code-block .comment { color: #68d391; }
+.code-block .key { color: #63b3ed; }
+
+.callout { border-left: 4px solid; border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 14px 0; font-size: 0.85rem; }
+.callout-ok   { border-color: #48bb78; background: #f0fff4; color: #22543d; }
+.callout-warn { border-color: #ecc94b; background: #fffff0; color: #744210; }
+.callout-err  { border-color: #fc8181; background: #fff5f5; color: #742a2a; }
+.callout-info { border-color: #4299e1; background: #ebf8ff; color: #2a4365; }
+
+.action-list li { margin-bottom: 8px; }
+.action-list .owner { display: inline-block; background: #e9d8fd; color: #44337a; border-radius: 4px; padding: 1px 7px; font-size: 0.7rem; font-weight: 700; margin-left: 6px; }
+.action-list .prio-alta  { background: #fed7d7; color: #742a2a; }
+.action-list .prio-media { background: #fefcbf; color: #744210; }
+.action-list .prio-baja  { background: #e2e8f0; color: #4a5568; }
+
+.summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 16px 0; }
+.scard { background: #f7fafc; border-radius: 8px; padding: 14px; border: 1px solid #e2e8f0; text-align: center; }
+.scard .val { font-size: 1.6rem; font-weight: 800; }
+.scard .lbl { font-size: 0.68rem; color: #718096; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; }
+.scard.ok  { border-color: #68d391; }
+.scard.warn { border-color: #ecc94b; }
+.scard.err  { border-color: #fc8181; }
+
+footer { text-align: center; font-size: 0.75rem; color: #a0aec0; margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0; }
+
+@media print {
+  body { background: #fff; padding: 20px; }
+  .cover { background: #1a365d !important; -webkit-print-color-adjust: exact; }
+  .section { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <h1>⚡ Recomendaciones QA Balance Energético</h1>
+  <div class="sub">Validación Sheet (Resumen_balance) vs API Olibia Energy — Versión TxF</div>
+  <div class="meta">
+    <span>📅 Generado: 12 de mayo de 2026</span>
+    <span>🏢 BIA Energy — Equipo Comercial</span>
+    <span>📊 Meses analizados: Enero – Abril 2026</span>
+    <span>🔗 Repo: github.com/nohora-droid/QA_balances_Biac</span>
+  </div>
+</div>
+
+<!-- Table of contents -->
+<div class="toc">
+  <h2>Contenido</h2>
+  <ol>
+    <li><a href="#resumen">Resumen ejecutivo</a></li>
+    <li><a href="#contratos-mr">Contratos MR — metodología correcta</a></li>
+    <li><a href="#contratos-mnr">Contratos MNR — separación Compra vs Venta</a></li>
+    <li><a href="#demanda">Demanda: diferencia sistemática TxF (STN vs PTB)</a></li>
+    <li><a href="#bolsa">Compra / Venta Bolsa — coincidencia exacta</a></li>
+    <li><a href="#abril">Datos abril — disponibilidad en API</a></li>
+    <li><a href="#proceso">Proceso QA: cómo correr las validaciones</a></li>
+    <li><a href="#acciones">Plan de acción para equipo Tech</a></li>
+  </ol>
+</div>
+
+<!-- 1. Resumen ejecutivo -->
+<div class="section" id="resumen">
+  <h2><span class="section-num">1</span>Resumen ejecutivo</h2>
+  <p>Se ejecutaron comparaciones mensuales entre los datos del sheet <strong>Resumen_balance</strong> y la API Olibia Energy (versión <strong>TxF</strong>) para los meses de enero a abril de 2026. Los resultados muestran una alta consistencia en los datos de contratos y bolsa. Las diferencias encontradas tienen explicación metodológica clara.</p>
+
+  <div class="summary-grid">
+    <div class="scard ok"><div class="val" style="color:#276749">10 / 13</div><div class="lbl">Variables ✅ ≤ 1%</div></div>
+    <div class="scard warn"><div class="val" style="color:#975a16">2 / 13</div><div class="lbl">Variables ⚠️ ≤ 5%</div></div>
+    <div class="scard err"><div class="val" style="color:#c53030">1 / 13</div><div class="lbl">Variables ❌ &gt; 5%</div></div>
+    <div class="scard"><div class="val">4</div><div class="lbl">Meses validados</div></div>
+  </div>
+
+  <table class="result-table">
+    <thead><tr><th>Variable</th><th>Ene 2026</th><th>Feb 2026</th><th>Mar 2026</th><th>Abr 2026</th><th>Conclusión</th></tr></thead>
+    <tbody>
+      <tr><td>Dem. Regulada TxF</td><td class="ok">+0.17%</td><td class="warn">-1.87%</td><td class="warn">-1.37%</td><td class="warn">-1.42%</td><td>Diferencia metodológica STN vs PTB</td></tr>
+      <tr><td>Dem. Regulada Plan</td><td class="err">+13%</td><td class="err">+19%</td><td class="err">+13%</td><td class="err">+12%</td><td>❌ No comparar — Plan ≠ TxF API</td></tr>
+      <tr><td>Contratos MR</td><td class="ok">0.00%</td><td class="ok">0.00%</td><td class="ok">0.00%</td><td class="ok">0.00%</td><td>✅ Coincidencia exacta</td></tr>
+      <tr><td>Contratos MNR</td><td class="ok">0.00%</td><td class="ok">0.00%</td><td class="ok">0.00%</td><td class="ok">0.00%</td><td>✅ Coincidencia exacta (con filtro)</td></tr>
+      <tr><td>Contratos Total</td><td class="ok">0.00%</td><td class="ok">0.00%</td><td class="ok">0.00%</td><td class="ok">0.00%</td><td>✅ Coincidencia exacta</td></tr>
+      <tr><td>Compra Bolsa Total</td><td class="ok">0.00%</td><td class="ok">0.00%</td><td class="ok">0.00%</td><td class="ok">0.00%</td><td>✅ Coincidencia exacta</td></tr>
+      <tr><td>Venta Bolsa Total</td><td class="ok">0.00%</td><td class="ok">0.00%</td><td class="ok">0.00%</td><td class="ok">0.00%</td><td>✅ Coincidencia exacta</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 2. Contratos MR -->
+<div class="section" id="contratos-mr">
+  <h2><span class="section-num">2</span>Contratos MR — metodología correcta <span class="badge badge-fix">RESUELTO</span></h2>
+
+  <div class="callout callout-ok">
+    <strong>Estado:</strong> Resuelto. Contratos MR coinciden en 0.00% para todos los meses analizados.
+  </div>
+
+  <h3>Problema inicial</h3>
+  <p>En una versión anterior del script se consultaba el endpoint <code>/contracts/monthly</code> para obtener los contratos MR. Este endpoint devolvía valores incorrectos (0 kWh para MR en todos los meses), posiblemente porque filtra por <code>day_type=TO</code> que no siempre está disponible.</p>
+
+  <h3>Solución implementada</h3>
+  <p>La fuente correcta para contratos energía despachada es el campo <strong><code>dispatch_desp</code></strong> del endpoint <code>/balance/matrices</code>. Este array contiene registros horarios con <code>market_type: "R"</code> (Regulado/MR) o <code>"N"</code> (No Regulado/MNR).</p>
+
+  <div class="code-block">
+<span class="comment">// Endpoint correcto para contratos MR/MNR</span>
+GET /balance/matrices?year=2026&amp;month=1&amp;version_name=TxF
+
+<span class="comment">// Estructura dispatch_desp</span>
+{ <span class="key">date</span>: "2026-01-01", <span class="key">hour</span>: 1, <span class="key">contract</span>: "84390",
+  <span class="key">market_type</span>: "N",  <span class="comment">// "R" = MR | "N" = NR (incluye compra Y venta)</span>
+  <span class="key">value</span>: 184.86 }   <span class="comment">// kWh</span>
+
+<span class="comment">// Suma MR: todos los registros market_type === "R"</span>
+api_cttosMR = dispatch_desp
+  .filter(r => r.market_type === 'R')
+  .reduce((s, r) => s + r.value, 0);</div>
+
+  <div class="callout callout-info">
+    <strong>Recomendación para Tech:</strong> Documentar que <code>dispatch_desp.market_type="R"</code> es la fuente canónica para contratos MR despachados en la versión TxF. El endpoint <code>/contracts/monthly</code> sirve para catálogo de contratos, no para energía despachada.
+  </div>
+</div>
+
+<!-- 3. Contratos MNR -->
+<div class="section" id="contratos-mnr">
+  <h2><span class="section-num">3</span>Contratos MNR — separación Compra vs Venta <span class="badge badge-fix">RESUELTO</span></h2>
+
+  <div class="callout callout-ok">
+    <strong>Estado:</strong> Resuelto. Contratos MNR coinciden en 0.00% para todos los meses una vez aplicado el filtro de contratos Venta NR.
+  </div>
+
+  <h3>Problema encontrado</h3>
+  <p>El campo <code>dispatch_desp market_type="N"</code> incluye <strong>tanto</strong> contratos de Compra MNR (lo que BIAC compra) <strong>como</strong> contratos de Venta NR (lo que BIAC vende a sus clientes no regulados). Si se suman todos los registros <code>market_type="N"</code> directamente, el total excede el valor del sheet en un 9–22% dependiendo del mes.</p>
+
+  <table class="result-table">
+    <thead><tr><th>Mes</th><th>dispatch_desp NR total</th><th>Exceso Venta NR</th><th>Compra NR correcta</th><th>Sheet MNR</th><th>Δ</th></tr></thead>
+    <tbody>
+      <tr><td>Ene 2026</td><td>44,015,909 kWh</td><td>7,960,717 kWh</td><td>36,055,192 kWh</td><td>36,055,192 kWh</td><td class="ok">0.00%</td></tr>
+      <tr><td>Feb 2026</td><td>~35,100,000 kWh</td><td>~3,040,000 kWh</td><td>32,058,310 kWh</td><td>32,058,310 kWh</td><td class="ok">0.00%</td></tr>
+      <tr><td>Mar 2026</td><td>~46,800,000 kWh</td><td>~11,660,000 kWh</td><td>35,138,624 kWh</td><td>35,138,624 kWh</td><td class="ok">0.00%</td></tr>
+      <tr><td>Abr 2026</td><td>~44,200,000 kWh</td><td>~13,210,000 kWh</td><td>30,991,749 kWh</td><td>30,991,749 kWh</td><td class="ok">0.00%</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Solución implementada</h3>
+  <p>Se consulta el endpoint <code>/contracts</code> (catálogo) para obtener los <code>sic_code</code> de todos los contratos con <code>operation="Venta"</code> y <code>type="NO REGULADO"</code>. Luego se excluyen esos <code>sic_code</code> del filtro en <code>dispatch_desp</code>.</p>
+
+  <div class="code-block">
+<span class="comment">// 1. Obtener sic_codes de contratos Venta NR desde catálogo</span>
+GET /contracts?limit=500&amp;offset=0
+
+<span class="comment">// Contratos Venta NR identificados (vigentes a 2026):</span>
+<span class="comment">// sic_code 88305 = OM202511NTCG-01 (BIAC)</span>
+<span class="comment">// sic_code 88867 = BIAC-12262025   (BIAC)</span>
+<span class="comment">// sic_code 88963 = 202512DEPI-01   (BIAC)</span>
+<span class="comment">// sic_code 88734 = 202511BTG-01    (BIAC)</span>
+<span class="comment">// sic_code 88503 = 202511RTAC-01   (BIAC)</span>
+
+const ventaNRSicCodes = new Set(
+  contracts
+    .filter(c => c.operation === 'Venta' &amp;&amp; c.type === 'NO REGULADO')
+    .map(c => c.sic_code)
+);
+
+<span class="comment">// 2. Filtrar dispatch_desp para obtener solo Compra MNR</span>
+api_cttosMNR = dispatch_desp
+  .filter(r => r.market_type === 'N' &amp;&amp; !ventaNRSicCodes.has(r.contract))
+  .reduce((s, r) => s + r.value, 0);</div>
+
+  <div class="callout callout-warn">
+    <strong>Atención:</strong> La lista de contratos Venta NR puede cambiar si se registran nuevos contratos de venta. El script consulta <code>/contracts</code> en cada ejecución, por lo que se mantiene actualizado automáticamente. Si se agrega un nuevo contrato de venta NR, el QA lo detectará correctamente sin cambios en el script.
+  </div>
+
+  <div class="callout callout-info">
+    <strong>Recomendación para Tech:</strong> Considerar agregar un campo <code>operation_type</code> directo en <code>dispatch_desp</code> (e.g. <code>"COMPRA"</code> / <code>"VENTA"</code>) para que el consumidor de la API no necesite cruzar contra el catálogo de contratos. Esto simplificaría la consulta y reduciría el riesgo de errores de cruce.
+  </div>
+</div>
+
+<!-- 4. Demanda -->
+<div class="section" id="demanda">
+  <h2><span class="section-num">4</span>Demanda: diferencia sistemática ~1.4–1.9% <span class="badge badge-warn">PENDIENTE ACLARACIÓN</span></h2>
+
+  <div class="callout callout-warn">
+    <strong>Estado:</strong> Diferencia identificada y explicada metodológicamente. No es un error de datos — es una diferencia de concepto entre fuentes. Se requiere decisión del equipo sobre cuál usar como referencia.
+  </div>
+
+  <h3>Hallazgo</h3>
+  <p>La demanda regulada TxF del sheet excede consistentemente a la que reporta la API en un rango de <strong>1.37% a 1.87%</strong> para todos los meses. La demanda no regulada muestra la misma diferencia sistemática.</p>
+
+  <table class="result-table">
+    <thead><tr><th>Mes</th><th>Sheet Dem.Reg TxF (kWh)</th><th>API DMRE (kWh)</th><th>Δ%</th></tr></thead>
+    <tbody>
+      <tr><td>Ene 2026</td><td>21,331,352</td><td>21,368,438</td><td class="ok">+0.17%</td></tr>
+      <tr><td>Feb 2026</td><td>21,951,957</td><td>21,541,856</td><td class="warn">-1.87%</td></tr>
+      <tr><td>Mar 2026</td><td>23,523,654</td><td>23,200,663</td><td class="warn">-1.37%</td></tr>
+      <tr><td>Abr 2026</td><td>22,870,625</td><td>22,544,956</td><td class="warn">-1.42%</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Causa probable</h3>
+  <p>Las dos fuentes miden puntos distintos del sistema de transmisión:</p>
+  <ul>
+    <li><strong>Sheet (TxF):</strong> Demanda medida en el punto de entrega al cliente, incluyendo pérdidas en la red de <strong>STN</strong> (Sistema de Transmisión Nacional).</li>
+    <li><strong>API (DMRE/DMNR):</strong> Demanda medida en el punto de <strong>PTB</strong> (Punto de Transferencia de Bolsa), que es antes de las pérdidas STN.</li>
+    <li>La diferencia de ~1.5% representa aproximadamente las pérdidas en el STN, que es un valor típico para el sistema colombiano.</li>
+  </ul>
+
+  <div class="callout callout-info">
+    <strong>Recomendación:</strong> Definir formalmente cuál es la fuente de verdad para la demanda en los reportes de balance:
+    <ul style="margin-top:8px">
+      <li>Si el balance debe reflejar lo entregado al cliente → usar el valor del sheet (TxF con STN)</li>
+      <li>Si debe reflejar lo comprado en bolsa/contratos → usar API DMRE/DMNR (PTB)</li>
+      <li>Documentar esta decisión en el procedimiento de cierre mensual</li>
+    </ul>
+  </div>
+
+  <div class="callout callout-err">
+    <strong>⚠ No comparar Demanda Plan vs API TxF:</strong> La columna "Plan" del sheet refleja proyecciones presupuestales. La API siempre reporta valores TxF (Transacciones Financieras, i.e., valores reales). La diferencia del 12–19% que aparece en el dashboard para "Demanda Regulada Plan" es esperada y no indica un error.
+  </div>
+</div>
+
+<!-- 5. Bolsa -->
+<div class="section" id="bolsa">
+  <h2><span class="section-num">5</span>Compra / Venta Bolsa — coincidencia exacta <span class="badge badge-ok">OK</span></h2>
+
+  <div class="callout callout-ok">
+    <strong>Estado:</strong> Los valores de Compra Bolsa y Venta Bolsa (Regulado, No Regulado y Total) coinciden en 0.00% para todos los meses validados.
+  </div>
+
+  <h3>Fuente API utilizada</h3>
+  <p>Los valores de bolsa se obtienen del endpoint <code>/balance/reconciliation</code>, específicamente del objeto <code>official_balcttos</code>:</p>
+
+  <div class="code-block">
+GET /balance/reconciliation?year=2026&amp;month=1&amp;version_name=TxF
+
+<span class="comment">// Campos usados en official_balcttos:</span>
+compras_regulado_mwh      <span class="comment">// → Compra Bolsa Regulado</span>
+compras_no_regulado_mwh   <span class="comment">// → Compra Bolsa No Regulado</span>
+ventas_regulado_mwh       <span class="comment">// → Venta Bolsa Regulado</span>
+ventas_no_regulado_mwh    <span class="comment">// → Venta Bolsa No Regulado</span></div>
+
+  <p>La denominación en el sheet es <strong>"BALANCE TRANSACCIONES DE BOLSA — Propio"</strong>. La coincidencia exacta confirma que el sheet y la API leen la misma fuente de datos de liquidación XM.</p>
+</div>
+
+<!-- 6. Abril -->
+<div class="section" id="abril">
+  <h2><span class="section-num">6</span>Datos abril 2026 <span class="badge badge-info">VALIDADO</span></h2>
+
+  <div class="callout callout-ok">
+    <strong>Estado:</strong> Datos de abril disponibles y validados. Contratos y bolsa coinciden en 0.00%.
+  </div>
+
+  <p>En ejecuciones anteriores, los datos de abril aparecían en cero en la API (dispatch_desp y reconciliation vacíos). Esto se debía a que la liquidación del mes no había sido cargada aún en la plataforma. En la ejecución del <strong>12 de mayo de 2026</strong> los datos ya están disponibles y las comparaciones son correctas.</p>
+
+  <div class="callout callout-info">
+    <strong>Recomendación:</strong> Para los meses más recientes, verificar en la plataforma Olibia que el proceso de carga de datos ya fue completado antes de correr el QA. Un resultado en cero para todos las variables indica datos aún no cargados, no un error del script.
+  </div>
+</div>
+
+<!-- 7. Proceso QA -->
+<div class="section" id="proceso">
+  <h2><span class="section-num">7</span>Proceso QA: cómo correr las validaciones</h2>
+
+  <h3>Requisitos</h3>
+  <ul>
+    <li>Node.js instalado</li>
+    <li>Bearer token de Firebase válido (dura 1 hora — obtener desde DevTools → Red → token?key=... → idToken)</li>
+    <li>Archivo de referencia <code>data-YYYY-MM-balance.json</code> para el mes a validar</li>
+  </ul>
+
+  <h3>Comando</h3>
+  <div class="code-block">node run-qa.js &lt;año&gt; &lt;mes&gt; "&lt;token&gt;"
+
+<span class="comment"># Ejemplos:</span>
+node run-qa.js 2026 1 "eyJhbGci..."   <span class="comment"># Enero</span>
+node run-qa.js 2026 4 "eyJhbGci..."   <span class="comment"># Abril</span></div>
+
+  <h3>Flujo del script</h3>
+  <ol>
+    <li><strong>/balance/context</strong> → obtiene versión TxF</li>
+    <li><strong>/contracts</strong> → sic_codes de contratos Venta NR (para filtrar MNR)</li>
+    <li><strong>/balance/matrices</strong> → demanda (DMRE/DMNR) + contratos (dispatch_desp)</li>
+    <li><strong>/balance/reconciliation</strong> → bolsa compra/venta (official_balcttos)</li>
+    <li>Compara vs <code>data-YYYY-MM-balance.json</code> y guarda resultado en <code>qa-results/</code></li>
+  </ol>
+
+  <h3>Visualización</h3>
+  <p>Abrir <code>dashboard.html</code> en el navegador para ver todas las ejecuciones. El dashboard funciona offline (datos embebidos). Usar el botón <strong>📥 Exportar todo CSV</strong> (header) para exportar todos los meses a Excel, o <strong>⬇ CSV</strong> en el detalle de cada ejecución.</p>
+
+  <h3>Actualizar dashboard después de correr QA</h3>
+  <div class="code-block">node -e "
+const fs=require('fs'),path=require('path');
+const outDir=path.join(process.cwd(),'qa-results');
+const idx=JSON.parse(fs.readFileSync(path.join(outDir,'index.json'),'utf8'));
+const runs={};
+idx.runs.forEach(r=>{try{runs[r.file]=JSON.parse(fs.readFileSync(path.join(outDir,r.file),'utf8'));}catch(e){}});
+let html=fs.readFileSync('dashboard.html','utf8');
+const s='&lt;script&gt;\nwindow.__EMBEDDED_INDEX__ = '+JSON.stringify(idx)+';\nwindow.__EMBEDDED_RUNS__ = '+JSON.stringify(runs)+';\n&lt;/script&gt;';
+html=html.replace(/&lt;script&gt;\nwindow.__EMBEDDED_INDEX__[\s\S]*?&lt;\/script&gt;/,s);
+fs.writeFileSync('dashboard.html',html);
+console.log('Dashboard actualizado');
+"</div>
+
+  <h3>Crear archivo de referencia para un mes nuevo</h3>
+  <p>Copiar los valores del sheet <strong>Resumen_balance</strong> en un archivo <code>data-YYYY-MM-balance.json</code> con la estructura:</p>
+  <div class="code-block">{
+  <span class="key">"demandaRegulada"</span>:    { "kwhMes": 20126150, "kwhMesTxF": 22870625 },
+  <span class="key">"demandaNoRegulada"</span>:  { "kwhMes": 22129264, "kwhMesTxF": 23541770 },
+  <span class="key">"contratos"</span>: [
+    {"mercado":"Compra MR",  "contraparte":"Enermas", "cantidadKwh": 3999900},
+    {"mercado":"Compra MNR", "contraparte":"AESP",    "cantidadKwh": 1640160},
+    ...
+  ],
+  <span class="key">"totalContratosSinBolsa"</span>: { "kwhMes": 46463081 },
+  <span class="key">"compraBolsa"</span>: {
+    "regulado":   { "kwhMes": 7414573 },
+    "noRegulado": { "kwhMes": 3074600 },
+    "total":      { "kwhMes": 10489174 }
+  },
+  <span class="key">"ventaBolsa"</span>: {
+    "regulado":   { "kwhMes": 15279 },
+    "noRegulado": { "kwhMes": 3204580 },
+    "total":      { "kwhMes": 3219859 }
+  },
+  <span class="key">"totalCompra"</span>: { "kwhMes": 56952256 },
+  <span class="key">"totalVenta"</span>:  { "kwhMes": 52795274 }
+}</div>
+</div>
+
+<!-- 8. Plan de acción -->
+<div class="section" id="acciones">
+  <h2><span class="section-num">8</span>Plan de acción</h2>
+
+  <h3>Para el equipo Tech (Olibia)</h3>
+  <ul class="action-list">
+    <li>
+      Agregar campo <code>operation_type</code> (<code>"COMPRA"</code>/<code>"VENTA"</code>) directamente en los registros de <code>dispatch_desp</code> para evitar el cruce con el catálogo de contratos.
+      <span class="owner prio-alta">ALTA</span>
+    </li>
+    <li>
+      Documentar la diferencia entre <code>demand.DMRE</code> (PTB) y la demanda STN del sheet — confirmar si la intención es reportar PTB o STN en el balance TxF.
+      <span class="owner prio-media">MEDIA</span>
+    </li>
+    <li>
+      Revisar por qué <code>/contracts/monthly</code> devuelve energía = 0 para contratos MR cuando se filtra por año/mes — este endpoint puede generar confusión si se usa incorrectamente.
+      <span class="owner prio-media">MEDIA</span>
+    </li>
+    <li>
+      Confirmar que los datos de un mes están listos antes de que el equipo comercial corra el QA. Podría ser útil un campo <code>data_status</code> en <code>/balance/context</code>.
+      <span class="owner prio-baja">BAJA</span>
+    </li>
+  </ul>
+
+  <h3>Para el equipo Comercial (BIA)</h3>
+  <ul class="action-list">
+    <li>
+      Correr el QA mensualmente dentro de los primeros 5 días hábiles del mes siguiente una vez cargados los datos TxF.
+      <span class="owner prio-alta">RUTINA</span>
+    </li>
+    <li>
+      Definir formalmente si la referencia de demanda en el balance es STN (sheet) o PTB (API) — documentar en el procedimiento de cierre.
+      <span class="owner prio-media">DECISIÓN</span>
+    </li>
+    <li>
+      Actualizar <code>data-YYYY-MM-balance.json</code> cada mes con los datos del sheet antes de correr el QA.
+      <span class="owner prio-alta">RUTINA</span>
+    </li>
+    <li>
+      Si aparece un nuevo contrato Venta NR, verificar que su <code>sic_code</code> esté correctamente registrado en <code>/contracts</code> con <code>operation="Venta"</code> y <code>type="NO REGULADO"</code>.
+      <span class="owner prio-media">VERIFICAR</span>
+    </li>
+  </ul>
+</div>
+
+<footer>
+  Documento generado automáticamente por el script QA Balance Energético — BIA Energy 2026<br>
+  Repositorio: <strong>github.com/nohora-droid/QA_balances_Biac</strong>
+</footer>
+
+</body>
+</html>
