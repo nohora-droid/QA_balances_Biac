@@ -85,9 +85,25 @@ async function main() {
   const ctx = await apiGet(`/balance/context?year=${YEAR}&month=${MONTH}`);
   let versionName = 'TxF';
   if (ctx.status === 200 && ctx.data) {
-    const versions = Array.isArray(ctx.data) ? ctx.data : ctx.data.versions || [];
-    const txf = versions.find ? versions.find(v => String(v?.version_name || v).includes('TxF')) : null;
-    if (txf) versionName = typeof txf === 'string' ? txf : txf.version_name;
+    // Support both legacy {versions:[{version_name}]} and new {version_names:['Tx1','Tx2']} formats
+    const versionList = Array.isArray(ctx.data)
+      ? ctx.data
+      : ctx.data.version_names || ctx.data.versions || [];
+    // Normalize to strings
+    const vNames = versionList.map(v => typeof v === 'string' ? v : (v?.version_name || ''));
+    // Preference order: TxF → Tx2 → Tx1 → first available
+    const preferred = ['TxF', 'Tx2', 'Tx1'];
+    for (const pref of preferred) {
+      const match = vNames.find(v => v === pref || v.includes(pref));
+      if (match) { versionName = match; break; }
+    }
+    if (vNames.length > 0 && !preferred.some(p => vNames.find(v => v === p || v.includes(p)))) {
+      versionName = vNames[vNames.length - 1]; // last as fallback
+    }
+    if (ctx.data.days) {
+      const loaded = ctx.data.days.filter(d => d.has_adem && d.has_trsd).length;
+      console.log(`   Días con datos: ${loaded}/${ctx.data.days.length}`);
+    }
   }
   console.log(`   Versión: ${versionName}`);
 
