@@ -23,7 +23,7 @@ if (!TOKEN) {
   process.exit(1);
 }
 
-const BASE = 'https://olibia.dev.bia.app/ms-olibia-energy/v1';
+const BASE = 'https://olibia.bia.app/ms-olibia-energy/v1';
 const MM   = String(MONTH).padStart(2, '0');
 const KEY  = `${YEAR}-${MM}`;
 
@@ -92,15 +92,25 @@ async function main() {
   console.log(`   Versión: ${versionName}`);
 
   // 2. /contracts catalog — sic_codes de contratos Venta NR (necesario antes de matrices)
+  // Fallback hardcodeado para cuando el catálogo de producción devuelve vacío.
+  // Contratos Venta NR identificados en el entorno dev (sic_codes verificados):
+  const VENTA_NR_FALLBACK = new Set(['88305','88963','88734','88503','88867']);
   console.log('2. contracts (catalog)...');
   const ctCat = await apiGet(`/contracts?limit=500&offset=0`);
-  const allContracts = (ctCat.status === 200 && ctCat.data.items) ? ctCat.data.items : [];
-  const ventaNRSicCodes = new Set(
-    allContracts
-      .filter(c => c.operation === 'Venta' && c.type === 'NO REGULADO' && c.sic_code)
-      .map(c => c.sic_code)
-  );
-  console.log(`   Contratos Venta NR (excluir de dispatch_desp MNR): ${[...ventaNRSicCodes].join(', ')}`);
+  const allContracts = (ctCat.status === 200 && ctCat.data.items && ctCat.data.items.length > 0) ? ctCat.data.items : [];
+  let ventaNRSicCodes;
+  if (allContracts.length > 0) {
+    ventaNRSicCodes = new Set(
+      allContracts
+        .filter(c => c.operation === 'Venta' && c.type === 'NO REGULADO' && c.sic_code)
+        .map(c => c.sic_code)
+    );
+    console.log(`   Contratos Venta NR (catálogo): ${[...ventaNRSicCodes].join(', ')}`);
+  } else {
+    // Catálogo vacío en producción — usar dispatch_desp para identificar Venta NR dinámicamente
+    ventaNRSicCodes = VENTA_NR_FALLBACK;
+    console.log(`   Catálogo vacío — usando fallback (${ventaNRSicCodes.size} sic_codes conocidos)`);
+  }
   const compras = []; // kept for backward compat
 
   // 3. Matrices — demanda + dispatch_desp (contratos energía despachada)
