@@ -15,6 +15,20 @@ map-cells-output.json
 reporte-qa-2026.html
 qa-report.json
 
+# Temp / debug files
+contracts.json
+mat_jun.json
+rec_jun.json
+scan_jun.json
+scan2_jun.json
+scan3_jun.json
+summary_jun.json
+jul_summary.json
+jul_sum2.json
+tmp_venta.json
+tmp2.json
+matriz-qa-results.json
+
 # OS / editor
 .DS_Store
 Thumbs.db
