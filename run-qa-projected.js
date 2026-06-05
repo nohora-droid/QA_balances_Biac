@@ -1,7 +1,8 @@
 /**
  * run-qa-projected.js — QA Balance Proyectado (Jun–Dic 2026)
- * Usage: node run-qa-projected.js <year> <month> [apiKey]
+ * Usage: node run-qa-projected.js <year> <month> [apiKey] [--sheet=SHEET_ID]
  * Example: node run-qa-projected.js 2026 6
+ *          node run-qa-projected.js 2026 6 --sheet=10YEUg38xo4a7kKGoxjvM4rwJkXsbOGo4HQnLTluYauE
  *
  * Reads:   Google Sheet (gviz API, balance summary section)
  * Fetches: Olibia Energy API con Api-key
@@ -13,7 +14,12 @@ const https = require('https');
 const fs    = require('fs');
 const path  = require('path');
 
-const [,, YEAR_S, MONTH_S, KEY_ARG] = process.argv;
+// Parse args — allow --sheet=ID or SHEET_ID env var anywhere in argv
+const rawArgs = process.argv.slice(2);
+const sheetArg = rawArgs.find(a => a.startsWith('--sheet='));
+const positional = rawArgs.filter(a => !a.startsWith('--'));
+
+const [YEAR_S, MONTH_S, KEY_ARG] = positional;
 const YEAR  = parseInt(YEAR_S  || '2026');
 const MONTH = parseInt(MONTH_S || '6');
 const PERCENTILE = 'p50';
@@ -23,7 +29,9 @@ const API_KEY = KEY_ARG
   || 'bia_4f9c2a81d7e6b3f0a5c8e14d92ab6731f5e807c2d4a9b61e38f7c5a0d2b4e91c7f63a5d1e8b40c29a7d6f31b5e9c0842d7a16c5b3f8e04d91ab67c2e5f3408a';
 
 const BASE     = 'https://integrations.bia.app/ms-olibia-energy/v1';
-const SHEET_ID = '1VcpYek6pGS45nhofob1TyP04wRtBqLFyjCbLpjnDkmA';
+const SHEET_ID = (sheetArg ? sheetArg.split('=')[1] : null)
+  || process.env.OLIBIA_SHEET_ID
+  || '1VcpYek6pGS45nhofob1TyP04wRtBqLFyjCbLpjnDkmA';
 const MM   = String(MONTH).padStart(2, '0');
 const KEY  = `${YEAR}-${MM}`;
 
@@ -429,6 +437,7 @@ async function main() {
     percentile: PERCENTILE,
     available_status: ctx.data.available_status,
     projected_days: projDays,
+    sheetId: SHEET_ID,
     comparisons,
     sheetContracts: {
       mr:      sh.contracts_mr,

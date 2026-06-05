@@ -383,6 +383,70 @@
       "period": "2026-12",
       "percentile": "p50",
       "status": "err"
+    },
+    {
+      "key": "2026-06",
+      "file": "2026-06_2026-06-05T15-12-11_p50.json",
+      "timestamp": "2026-06-05T15:12:11.411Z",
+      "period": "2026-06",
+      "percentile": "p50",
+      "status": "ok"
+    },
+    {
+      "key": "2026-06",
+      "file": "2026-06_2026-06-05T15-14-40_p50.json",
+      "timestamp": "2026-06-05T15:14:40.713Z",
+      "period": "2026-06",
+      "percentile": "p50",
+      "status": "err"
+    },
+    {
+      "key": "2026-07",
+      "file": "2026-07_2026-06-05T15-14-47_p50.json",
+      "timestamp": "2026-06-05T15:14:47.072Z",
+      "period": "2026-07",
+      "percentile": "p50",
+      "status": "err"
+    },
+    {
+      "key": "2026-08",
+      "file": "2026-08_2026-06-05T15-14-54_p50.json",
+      "timestamp": "2026-06-05T15:14:54.795Z",
+      "period": "2026-08",
+      "percentile": "p50",
+      "status": "err"
+    },
+    {
+      "key": "2026-09",
+      "file": "2026-09_2026-06-05T15-15-01_p50.json",
+      "timestamp": "2026-06-05T15:15:01.169Z",
+      "period": "2026-09",
+      "percentile": "p50",
+      "status": "err"
+    },
+    {
+      "key": "2026-10",
+      "file": "2026-10_2026-06-05T15-15-08_p50.json",
+      "timestamp": "2026-06-05T15:15:08.874Z",
+      "period": "2026-10",
+      "percentile": "p50",
+      "status": "err"
+    },
+    {
+      "key": "2026-11",
+      "file": "2026-11_2026-06-05T15-15-16_p50.json",
+      "timestamp": "2026-06-05T15:15:16.677Z",
+      "period": "2026-11",
+      "percentile": "p50",
+      "status": "err"
+    },
+    {
+      "key": "2026-12",
+      "file": "2026-12_2026-06-05T15-15-23_p50.json",
+      "timestamp": "2026-06-05T15:15:23.106Z",
+      "period": "2026-12",
+      "percentile": "p50",
+      "status": "err"
     }
   ]
 }

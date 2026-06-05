@@ -1,0 +1,219 @@
+{
+  "generatedAt": "2026-06-05T15:12:11.411Z",
+  "period": "2026-06",
+  "year": 2026,
+  "month": 6,
+  "percentile": "p50",
+  "available_status": "en_curso",
+  "projected_days": 30,
+  "sheetId": "10YEUg38xo4a7kKGoxjvM4rwJkXsbOGo4HQnLTluYauE",
+  "comparisons": {
+    "demanda_regulada": {
+      "label": "Demanda Regulada (DMRE)",
+      "sheet_kwh": null,
+      "api_kwh": 22069999.99999998,
+      "pct": null,
+      "note": "demand → DMRE matrices vs sheet"
+    },
+    "demanda_nr": {
+      "label": "Demanda No Regulada (DMNR)",
+      "sheet_kwh": null,
+      "api_kwh": 24589999.999999966,
+      "pct": null,
+      "note": "demand → DMNR matrices vs sheet"
+    },
+    "contratos_mr": {
+      "label": "Contratos compra MR",
+      "sheet_kwh": null,
+      "api_kwh": 22200485.238594882,
+      "pct": null,
+      "note": "dispatch_desp REGULADO vs sheet"
+    },
+    "contratos_mnr": {
+      "label": "Contratos compra MNR",
+      "sheet_kwh": null,
+      "api_kwh": 32980486.146398474,
+      "pct": null,
+      "note": "dispatch_desp NO_REG (excl venta) vs sheet"
+    },
+    "contratos_venta_nr": {
+      "label": "Contratos venta NR",
+      "sheet_kwh": null,
+      "api_kwh": 11584267.200000137,
+      "pct": null,
+      "note": "venta NR contratos"
+    },
+    "compra_bolsa_mr": {
+      "label": "Compra Bolsa MR",
+      "sheet_kwh": null,
+      "api_kwh": 1577024.2795977993,
+      "pct": null,
+      "note": "⚠ metodologías distintas (proj vs calc)"
+    },
+    "compra_bolsa_mnr": {
+      "label": "Compra Bolsa NR",
+      "sheet_kwh": null,
+      "api_kwh": 3733817.981449615,
+      "pct": null,
+      "note": "⚠ metodologías distintas"
+    },
+    "venta_bolsa_mr": {
+      "label": "Venta Bolsa MR",
+      "sheet_kwh": null,
+      "api_kwh": 1707509.5181922691,
+      "pct": null,
+      "note": "⚠ metodologías distintas"
+    },
+    "venta_bolsa_mnr": {
+      "label": "Venta Bolsa NR",
+      "sheet_kwh": null,
+      "api_kwh": 540036.927849616,
+      "pct": null,
+      "note": "⚠ metodologías distintas"
+    }
+  },
+  "sheetContracts": {
+    "mr": [],
+    "mnr": [],
+    "venta_nr": []
+  },
+  "apiContracts": [
+    {
+      "number": "66970",
+      "market_type": "NO REGULADO",
+      "kWh": 652672.799999995
+    },
+    {
+      "number": "68371",
+      "market_type": "REGULADO",
+      "kWh": 3999900
+    },
+    {
+      "number": "70742",
+      "market_type": "NO REGULADO",
+      "kWh": 3002400
+    },
+    {
+      "number": "74675",
+      "market_type": "NO REGULADO",
+      "kWh": 1499760
+    },
+    {
+      "number": "74679",
+      "market_type": "NO REGULADO",
+      "kWh": 2499998.400000009
+    },
+    {
+      "number": "78860",
+      "market_type": "NO REGULADO",
+      "kWh": 5760000
+    },
+    {
+      "number": "79030",
+      "market_type": "NO REGULADO",
+      "kWh": 1640160
+    },
+    {
+      "number": "79348",
+      "market_type": "REGULADO",
+      "kWh": 5982120
+    },
+    {
+      "number": "84390",
+      "market_type": "NO REGULADO",
+      "kWh": 11151618.974999996
+    },
+    {
+      "number": "86719",
+      "market_type": "NO REGULADO",
+      "kWh": 2339455.390000002
+    },
+    {
+      "number": "87326",
+      "market_type": "NO REGULADO",
+      "kWh": 1000000.8000000087
+    },
+    {
+      "number": "87466",
+      "market_type": "NO REGULADO",
+      "kWh": 2000001.6000000173
+    },
+    {
+      "number": "87521",
+      "market_type": "REGULADO",
+      "kWh": 163281.59999999928
+    },
+    {
+      "number": "87522",
+      "market_type": "REGULADO",
+      "kWh": 1039996.7999999807
+    },
+    {
+      "number": "87552",
+      "market_type": "NO REGULADO",
+      "kWh": 175584.0000000001
+    },
+    {
+      "number": "87717",
+      "market_type": "REGULADO",
+      "kWh": 660096.0000000022
+    },
+    {
+      "number": "87721",
+      "market_type": "REGULADO",
+      "kWh": 3960000
+    },
+    {
+      "number": "87724",
+      "market_type": "REGULADO",
+      "kWh": 1499997.6000000068
+    },
+    {
+      "number": "87751",
+      "market_type": "NO REGULADO",
+      "kWh": 1258834.1813999997
+    },
+    {
+      "number": "88305",
+      "market_type": "NO REGULADO",
+      "kWh": 4000003.2000000346
+    },
+    {
+      "number": "88412",
+      "market_type": "REGULADO",
+      "kWh": 4895093.238594465
+    },
+    {
+      "number": "88503",
+      "market_type": "NO REGULADO",
+      "kWh": 2000001.6000000173
+    },
+    {
+      "number": "88867",
+      "market_type": "NO REGULADO",
+      "kWh": 5584262.399999959
+    }
+  ],
+  "sheetTotals": {
+    "dmre": null,
+    "dmnr": null,
+    "contratos_mr": null,
+    "contratos_mnr": null,
+    "compra_bolsa_mr": null,
+    "compra_bolsa_mnr": null,
+    "venta_bolsa_mr": null,
+    "venta_bolsa_mnr": null
+  },
+  "apiTotals": {
+    "dmre_kwh": 22069999.99999998,
+    "dmnr_kwh": 24589999.999999966,
+    "contratos_mr_kwh": 22200485.238594882,
+    "contratos_mnr_kwh": 32980486.146398474,
+    "contratos_venta_nr_kwh": 11584267.200000137,
+    "compra_bolsa_mr_kwh": 1577024.2795977993,
+    "compra_bolsa_mnr_kwh": 3733817.981449615,
+    "venta_bolsa_mr_kwh": 1707509.5181922691,
+    "venta_bolsa_mnr_kwh": 540036.927849616,
+    "bolsa_trsd_net_kwh": 330235.5120015
+  }
+}
